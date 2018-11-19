@@ -29,6 +29,19 @@ remove of line from .snapsot__metadata__ at specified location (/home/userfolder
 
 CheckSnapShotExistForFile(sourceDirectoryPath,destinationdirectoryPath)
 
+Done :
+
+Comands Created inside executable need to process: 
+
+startSnapShotEngine -> start process : jha to give program which can run in background 
+
+CreateSnapShot SourcePath DestinationPath : working 
+
+restoreSnapShot SourcePath : not yet
+
+stopSnashot sourcePath : working
+
+
 -------------------
 Jha : 
 
