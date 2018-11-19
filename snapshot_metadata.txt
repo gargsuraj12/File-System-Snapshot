@@ -1,2 +1,0 @@
-SourcePath	DestinationPath	TimeStamp
-/home/prakashjha/Desktop/dir1	/home/prakashjha/Desktop/dir1Destination	20-12-2018 12:10PM
