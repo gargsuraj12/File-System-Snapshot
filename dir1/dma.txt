@@ -1,0 +1,328 @@
+Vertex cover to clique 
+
+    Here, we consider the problem of finding out whether there is a clique of size k in the given graph. Therefore, an instance of the clique problem is a graph G (V, E) and a non-negative integer k, and we need to check for the existence of a clique of
+    size k in G.
+
+    Now, we need to show that any instance (G, k) of the Clique problem can be reduced to an instance of the vertex cover problem. Consider the graph G’ which consists of all edges not in G, but in the complete graph using all vertices in G. Let us call this the complement of G. Now, the problem of finding whether a clique of size k exists in the graph G is the same as the problem of finding whether there is a vertex cover of size |V| – k in G’. We need to show that this is indeed the case.
+
+    Assume that there is a clique of size k in G. Let the set of vertices in the clique be V’. This means |V’| = k. In the complement graph G’, let us pick any edge (u, v). Then at least one of u or v must be in the set V – V’. This is because, if both u and v were from the set V’, then the edge (u, v) would belong to V’, which, in turn would mean that the edge (u, v) is in G. This is not possible since (u, v) is not in G. Thus, all edges in G’ are covered by vertices in the set V – V’.
+
+    Now assume that there is a vertex cover V’’ of size |V| – k in G’. This means that all edges in G’ are connected to some vertex in V’’. As a result, if we pick any edge (u, v) from G’, both of them cannot be outside the set V’’. This means, all
+    edges (u, v) such that both u and v are outside the set V’’ are in G, i.e., these edges constitute a clique of size k.
+
+Thus, we can say that there is a clique of size k in graph G if and only if there is a vertex cover of size |V| – k in G’, and hence, any instance of the clique problem can be reduced to an instance of the vertex cover problem. Thus, vertex cover is NP Hard. Since vertex cover is in both NP and NP Hard classes, it is NP Complete.
+
+
+I. NP-Completeness
+
+Problem Q is NP-complete means: 
+(1) it's in NP, and 
+(2) any other problem Q' in NP is poly-time reducible to Q.  
+
+NP-completeness proofs:
+1. Prove Q is in NP
+2. Select a known NP-complete problem Q'
+3. Describe a poly-time algorithm that computes a function f mapping 
+   every instance x' of Q' to an instance x = f(x') of Q
+4. Prove for all instances x' of Q': 
+   x' is YES instance of Q' iff x = f(x') is YES instance of Q.
+
+(If can solve Q in poly-time then can solve Q'.)
+
+Showed in last class that Algorithm-SAT and Circuit-SAT are NP-complete.
+
+**********
+
+a. 3-SAT
+
+3-SAT: Given a formula on boolean variables that's an AND of ORs like 
+(x1 OR x2 OR not(x3)) AND (not(x2) OR x3) AND (x1 OR x3) AND ...
+where each clause has at most 3 literals in it.  Question: Is there
+an assignment to the variables that satisfies the formula (i.e., causes
+the formula to evaluate to 1)?
+
+E.g., Setting x1=1, x2=0, x3=0 satisfies the above formula.
+
+Will show 3-SAT is NP-complete by reduction from circuit-SAT.
+Recall from last class:
+
+Circuit-SAT: Given a circuit of OR and NOT gates with multiple inputs
+and a single output (some of the inputs may be hardwired).   
+Is there a setting of the inputs that causes the circuit to output 1?
+
+E.g.,        x1  x2   x3   x4
+              \  /    |    / 
+               OR    NOT  /     YES instance: x1=1, etc
+                 \  /  | /
+                  OR   OR
+                   \  /
+                    OR
+                     |
+
+Theorem: 3-SAT is NP-complete. 
+
+Proof: (1) In NP.  Why???
+[Witness: A setting of the variables that makes the formula true.
+Can check in linear time whether setting makes the formula true.]
+
+(2) Reduce circuit-SAT to 3-SAT.  
+
+(3) Mapping: Given circuit of NOT and OR gates.
+Convert to 3-CNF by giving new vars to internal wires of circuit.
+
+E.g.,        x1  x2    x3   x4
+              \  /     |    / 
+               OR     NOT  /
+               y1\ y2/ y3\/
+                   OR    OR
+                   y4\  /y5
+                      OR
+                      |y6
+
+Use clauses to say that all internal gates are producing the correct
+outputs given their inputs.  We will apply DeMorgan's Laws:
+     * not(A and B) = not(A) or not(B)
+     * not(A or B) = not(A) and not(B)
+
+
+     z = OR(x,y): can't have z be 1 when both x and y are 0
+                  can't have z be 0 when x is 1
+                  can't have z be 0 when y is 1
+              not((z and not(x) and not(y)) or (not(z) and x) or (not(z) and y)) =
+              (not(z) or x or y) AND (z or not(x)) AND (z or not(y))
+
+     y = not(x): What is the formula???
+                 [can't have x and y both be 1 or both be 0:
+                  not((x and y) or (not(x) and not(y)) =
+                  (not(x) or not(y)) AND (x or y)]
+ 
+Finally, need output of circuit to be 1, so if y is the output,
+add clause (y) 
+
+E.g., (not(y1) or x1 or x2) AND (y1 or not(x1)) AND (y1 or not(x2)) AND
+      (not(x3) or not(y2)) AND (x3 or y2) AND
+      (not(x3) or not(y3)) AND (x3 or y3) AND
+      (not(y4) or y1 or y2) AND (y4 or not(y1)) AND (y4 or not(y2)) AND
+      (not(y5) or y3 or x4) AND (y5 or not(y3)) AND (y5 or not(x4)) AND
+      (not(y6) or y4 or y5) AND (y6 or not(y4)) AND (y6 or not(y5)) AND
+      (y6)
+
+The size of the formula is polynomial (actually, linear) in the size
+of the circuit.  The construction can be done in polynomial time.
+
+(4) If the circuit has a satisfying assignment to its input wires, each
+wire of the circuit has a well-defined value, and the output of the
+circuit is 1.  Therefore, the assignment of wire values to variables in
+the 3-CNF formula makes each clause in the formula evaluate to 1.
+Thus the conjunction of all clauses evaluates to 1.
+Conversely, if there is an assignment that causes the formula to evaluate
+to 1, the circuit is satisfiable by an analogous argument.
+Thus the 3-CNF formula produced is satisfiable if and only if the original
+circuit was satisfiable.
+
+Thus 3-SAT is NP-complete since if we could solve 3-SAT in poly time, 
+then we could solve circuit-SAT in poly time too.
+QED
+
+**********
+
+b. CLIQUE
+
+A clique in an undirected graph is a subset of the vertices, each pair
+of which is connected by an edge.
+
+[Give example]
+
+CLIQUE: Given an undirected graph G, integer k. 
+        Question: Does G have a clique of size k?
+
+(Not to be confused with the k-Clique problem in the homework.)
+
+Theorem: CLIQUE is NP-complete.
+
+Proof: (1) In NP.  Why???
+[Witness: a set of k vertices forming a clique]
+
+(2) Reduce 3-SAT to CLIQUE.
+
+(3) Given a 3-CNF formula F of m clauses over n variables, we construct a
+graph as follows.  For each clause C of F we create one node for every
+literal in the clause.  We put an edge between two nodes iff 
+   (a) they correspond to distinct clauses, and
+   (b) one literal is not the negation of the other.
+
+E.g., F = (x1 OR x2 OR not(x4)) AND (not(x3) OR x4) AND (not(x2) OR not(x3))
+
+      C1:x1  adjacent to C2:x3', C2:x4, C3:x2', C3:x3'
+      C1:x2  adjacent to C2:x3', C2:x4, C3:x3'
+      C1:x4' adjacent to C2:x3', C3:x2', C3:x3'
+      C2:x3' and C2:x4 are also both adjacent to C3:x2' and C3:x3'
+
+This mapping can be constructed in polynomial time.
+
+(4) If the 3-SAT problem has a satisfying assignment, then each clause
+contains at least one literal set to 1.  Picking one such literal
+from each clause gives m nodes.  These m nodes form a clique.  Why???
+[Because they correspond to distinct clauses and no two of them are negations
+of one another (since the assignment can not set to one both a literal
+and its negation).]
+
+Conversely, if there is an m-clique, then there is exactly one node from
+each clause in this clique (edges only go between clauses) and assigning 1
+to each of these nodes yields a satisfying assignment.  Why???
+[There is an edge between each pair of nodes - so can't be assigning 1 
+to both a literal and its negation.]
+Any variable not assigned in this way can be set arbitrarily.  Why???
+[Already satisfied all the clauses.]
+
+Thus, CLIQUE is NP-complete.
+QED
+
+**********
+
+c. INDEPENDENT SET
+
+An independent set in a graph is a set of nodes no two of which share an edge.  
+
+E.g., in a 7-cycle, the largest independent set has size 3.
+
+INDEPENDENT SET: Given an undirected graph G and an integer k.
+                 Question: Is there an independent set of size k?
+
+Theorem: Independent set is NP-complete. 
+
+Proof: (1) In NP: witness is k nodes with no incident edges.
+(2) Reduce from CLIQUE.  
+(3-4) What is the mapping???
+[Given graph G for clique problem, just take complement of the graph.
+I.e., create graph H such that H has edge (u,v) iff G does NOT have edge (u,v)
+Then H has an indep set of size k iff G has a clique of size k.]
+QED
+
+**********
+
+d. 3-COLORING
+
+A k-coloring of an undirected graph G is an assignment of colors to nodes
+such that each node is assigned a different color from all its neighbors,
+and at most k colors are used.
+
+In the homework, we consider the search version of this problem:
+Find the minimum k for which there is a k-coloring.
+
+The decision problem is:
+
+k-COLORING: Given an undirected graph G and an integer k.
+            QUESTION: Is there a k-coloring of G?
+
+The search problem is poly-time reducible to the decision problem: Why???
+[Can use the decision problem in a binary search for the minimum k.]
+
+We will show 3-COLORING is NP-complete.
+Does this imply k-COLORING is NP-complete???
+[yes. If could solve in poly-time for arbitrary k, then could solve 
+ in poly-time for k=3.]
+
+Theorem: 3-COLORING is NP-Complete.
+
+Proof: (1) In NP: witness is a 3-coloring.
+
+(2) Reduce 3-SAT to 3-COLORING.
+(3) Given a 3-SAT formula of m clauses on n variables x1,x2,...,xn,
+we construct a graph G as follows.  We have 
+    (a) a vertex vi for each variable xi,
+    (b) a vertex vi' for the negation of each variable xi,
+    (c) 5 vertices j1-j5 for each clause j,
+    (d) 3 special vertices: T, F, R
+
+We would like T, F, and R to be forced to different colors,
+so we will add edges between them to form a triangle.
+For the remaining nodes, and node that is colored the same color
+as T/F/R will be called colored TRUE/FALSE/RED, respectively.
+
+We would like the edges to enforce the constraints on
+satisfying assignments.
+
+Constraint: For all i, exactly one of vi and vi' is colored TRUE
+and one is colored FALSE.
+
+Edges: for each i, form a triangle between vi, vi', and R.
+
+Constraint: For each clause j, at least one of the literals in the
+clause is colored TRUE.
+
+Edges: for each clause j, say = (xi or not(xj) or xk), we have the
+following gadget
+
+     vi ---j1
+            |\
+            | j3---j4
+            |/      | \
+     vj'---j2       |  T
+                    | /
+     vk -----------j5
+
+Claim: If each of vi, vj', and vk is colored TRUE or FALSE, then gadget
+is 3-colorable iff at least one of vi, vj', and vk is colored TRUE.
+
+Proof: If vi, vj', and vk are all colored false, then we are forced to
+the following colors:
+
+     F  ---j1
+            |\
+            | j3--- F
+            |/      | \
+     F  ---j2       |  T
+                    | /
+     F  ----------- R
+
+But then j1, j2, j3 all must be colored different colors and NONE can be colored
+F, so there is no legal coloring.
+
+The remainder of the proof considers the 7 possible combinations of coloring
+vi, vj', and vk such that at least one is colored TRUE and the rest are colored
+FALSE, and shows that a 3 coloring exists in each case.
+As an example, if vk is colored TRUE but vi and vj' are colored FALSE, we have
+the following legal 3-coloring:
+
+     F  --- T
+            |\
+            | F --- R
+            |/      | \
+     F  --- R       |  T
+                    | /
+     T  ----------- F
+
+The other cases are similar and were presented in class.
+
+The construction takes polynomial time.
+
+(4) Follows from the above arguments.
+
+Thus 3-COLORING is NP-complete.
+
+
+
+
+
+
+Consider a graph G=(V,E)
+Given a node vi∈V
+as you did, you can split into 2 variables vi,1 and vi,2
+
+representing the 2 colors.
+
+Now you just need 3 kind of clauses:
+
+    each node cannot have more than one color
+    Each node must have assigned a color
+    ∀
+
+edge (u,v)∈E, u and v
+
+    cannot have the same color.
+
+Then you just have to write it as a conjunction of clauses, where each clause is a disjunction of 2 literals.
+
+G admits a 2-coloring ⟺
+there exists a truth assignment that satisfy the formula.
