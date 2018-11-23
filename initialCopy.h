@@ -122,10 +122,44 @@ class CopyFunctionality
         }
         int chdirval = chdir(source);
         if(chdir(source)){
-            perror("invalid path");
+            char temppath[1024];
+            struct stat infofile;
+            strcpy(temppath,source);
+            if(!stat(temppath,&infofile)){
+                if(S_ISREG(infofile.st_mode)){
+                    //copy_file(source,destination,e->d_name);
+                    int lastindex = 0;
+                    for(int i=0;i<strlen(temppath);i++){
+                        if(temppath[i]=='/')
+                            lastindex = i;
+                    }
+                    char filen[256];
+                    char sd[1024];
+                    int j=0;int k=0;
+                    for(int i=0;i<strlen(temppath);i++){
+                        if(i>lastindex){
+                            filen[j]=temppath[i];
+                            j++;
+                        }
+                        else{
+                            sd[k]=temppath[i];
+                            k++;
+                        }
+                    }
+                    sd[k]='\0';
+                    filen[j]='\0';
+                    cout<<"filen is "<<filen<<" and is loc is "<<sd<<endl;
+                    copy_file(sd,destination,filen);
+                    cout<<"path for file is "<<temppath<<endl;
+                    //printf("is_reg file is %s\n",e->d_name);
+                }
+            }
+            else
+                perror("invalid path");
             return;
         }
         //printcwd();
+        //struct stat info;
         struct stat info;
         char path[256];
         char dpath[256];
