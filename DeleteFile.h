@@ -1,20 +1,20 @@
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <iostream>
+// #include <stdio.h>
+// #include <string.h>
+// #include <stdlib.h>
+// #include <dirent.h>
+// #include <sys/stat.h>
+// #include <unistd.h>
+// #include <iostream>
 #define ERRORDIRNOTEXIST -110
 #define ERRORWHILEDELETING -111
 #define ERRORPERMISSIONWHILEDELETING -112
 #define ERRORPATHNOTEXIST -113
 #define SUCCESS 100
 
-#include<string>
-#include<bits/stdc++.h>
-using namespace std;
+// #include<string>
+// #include<bits/stdc++.h>
+// using namespace std;
 
 class DeleteFunctionality{
     public:
@@ -115,14 +115,13 @@ class DeleteFunctionality{
         }
 
 };
-int main(const int argc, char const *argv[])
-{
-    char p[1024];
-    scanf("%s",p);
-    DeleteFunctionality obj;
-    obj.removedirectory(p);
+// int main(const int argc, char const *argv[])
+// {
+//     char p[1024];
+//     scanf("%s",p);
+//     DeleteFunctionality obj;
+//     obj.removedirectory(p);
 
-    return 0;
-}
-
+//     return 0;
+// }
 
