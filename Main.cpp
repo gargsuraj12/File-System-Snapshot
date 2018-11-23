@@ -30,6 +30,22 @@ bool iequals(const std::string& str1, const std::string& str2)
     return std::equal(str1.begin(), str1.end(), str2.begin(), iequal());
 }
 
+string getCurrentTimeZone()
+{
+    std::time_t rawtime;
+    std::tm* timeinfo;
+    char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
+
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+
+    std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
+    std::puts(buffer);
+	string finalresult(buffer);
+	delete buffer;
+	return finalresult;
+}
+
 char * getCurrentTime()
 {
     std::time_t result = std::time(nullptr);
@@ -42,6 +58,8 @@ SnapShotMetaDataInformation setDetailsOfMetaData(string sourcePath,string destin
 	information.sourcePath=sourcePath;
 	information.destinationPath=destinationPath;
 	information.dateTimeStamp=getCurrentTime();
+	information.creationTimeStamp=getCurrentTimeZone();
+	information.lastRunTime=information.creationTimeStamp;
 	return information;
 }	
 
@@ -54,7 +72,11 @@ string PrepareData(struct SnapShotMetaDataInformation info)
 		strData.append("\t");
 		strData.append(info.destinationPath);
 		strData.append("\t");
-		strData.append(info.dateTimeStamp);
+		strData.append(info.creationTimeStamp);
+		strData.append("\t");
+		strData.append(info.lastRunTime);
+		strData.erase( std::remove(strData.begin(), strData.end(), '\r'), strData.end() );
+		strData.erase( std::remove(strData.begin(), strData.end(), '\n'), strData.end() );
 		//strData.append("\n");
 	}
 	return strData;
@@ -250,7 +272,7 @@ int main(int argc,char *argv[])
 		string data = PrepareData(information);
 		if(writeToEndOfFile(data)==true)
 		{
-			printf(" FIle Successfully Written");
+			printf(" FIle Successfully Wirtten");
 			return 110;
 		}
 		writeLog("Main : Performing Entry in SnapShot Metadata File : Complete ");				
