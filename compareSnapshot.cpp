@@ -1,41 +1,10 @@
-#include<bits/stdc++.h>
+#include "library.h"
+#include "HelperClass.h"
 
 using namespace std;
 
 string SRCPATH = "";
 string DESTPATH = "";
-
-struct snapshotDetails{
-
-	string fullQualifiedPath;
-	string ownership;
-	string timeStamp;
-	string accessRights;
-};
-
-struct compareSnapshotDS{
-
-	struct snapshotDetails details;
-	string newTimeStamp;
-	string oldTimeStamp;
-	string operationType;
-
-};
-
-
-vector<string> split(char *phrase, string delimiter){
-    vector<string> list;
-    string s = string(phrase);
-    size_t pos = 0;
-    string token;
-    while ((pos = s.find(delimiter)) != string::npos) {
-        token = s.substr(0, pos);
-        list.push_back(token);
-        s.erase(0, pos + delimiter.length());
-    }
-    list.push_back(s);
-    return list;
-}
 
 
 vector<struct snapshotDetails> readSnapshot(string path){
@@ -120,18 +89,20 @@ void replaceSnapshotFile(string sourcePath,string destinationPath){
 }
 
 
-vector<struct compareSnapshotDS> compareSnapshotFile(string sourcePath,string destinationPath){
+vector<struct compareSnapshot> compareSnapshotFile(string sourcePath,string destinationPath){
 
 	ifstream sourceSnapshot(sourcePath),destinationSnapshot(destinationPath);
 	
 	vector<struct snapshotDetails> sourceDetails, destinationDetails;
 
-	vector<struct compareSnapshotDS> diffList;
-	struct compareSnapshotDS listItem;
+	vector<struct compareSnapshot> diffList;
+	struct compareSnapshot listItem;
 
 	sourceDetails = readSnapshot(sourcePath);
 
 	destinationDetails = readSnapshot(destinationPath);
+
+	// cout<<"prakash\n";
 
 	bool isPresent = false;
 
@@ -145,7 +116,7 @@ vector<struct compareSnapshotDS> compareSnapshotFile(string sourcePath,string de
 
 				if(sourceDetails[i].timeStamp != destinationDetails[j].timeStamp){
 
-					// listItem = (struct compareSnapshotDS*)malloc(sizeof(struct compareSnapshotDS));
+					// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
 					listItem.details = sourceDetails[i];
 					listItem.operationType = "modify";
 					diffList.push_back(listItem);
@@ -159,7 +130,7 @@ vector<struct compareSnapshotDS> compareSnapshotFile(string sourcePath,string de
 
 		if(isPresent == false){
 
-			// listItem = (struct compareSnapshotDS*)malloc(sizeof(struct compareSnapshotDS));
+			// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
 			listItem.details = sourceDetails[i];
 			listItem.operationType = "create";
 			diffList.push_back(listItem);
@@ -170,7 +141,7 @@ vector<struct compareSnapshotDS> compareSnapshotFile(string sourcePath,string de
 
 	for(int i=0;i<destinationDetails.size();i++){
 		
-		for(int j=0;i<sourceDetails.size();j++){
+		for(int j=0;j<sourceDetails.size();j++){
 
 			if(destinationDetails[i].fullQualifiedPath == sourceDetails[j].fullQualifiedPath){
 
@@ -181,8 +152,8 @@ vector<struct compareSnapshotDS> compareSnapshotFile(string sourcePath,string de
 
 		if(isPresent == false){
 
-			// listItem = (struct compareSnapshotDS*)malloc(sizeof(struct compareSnapshotDS));
-			listItem.details = sourceDetails[i];
+			// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
+			listItem.details = destinationDetails[i];
 			listItem.operationType = "delete";
 			diffList.push_back(listItem);
 			// free(listItem);
@@ -191,46 +162,50 @@ vector<struct compareSnapshotDS> compareSnapshotFile(string sourcePath,string de
 		isPresent = false;
 	}
 
-	replaceSnapshotFile(sourcePath,destinationPath);
+	//replaceSnapshotFile(sourcePath,destinationPath);
 
 	return diffList;
 }
 
 
-bool runTasks(vector<struct compareSnapshotDS> diffList){
+// bool runTasks(vector<struct compareSnapshot> diffList){
 
-	string dPath = "",sPath = "";
+// 	string dPath = "",sPath = "";
 
-	for(int i = 0;i<diffList.size();i++){
+// 	for(int i = 0;i<diffList.size();i++){
 
-		if(diffList[i].operationType == "create"){
+// 		if(diffList[i].operationType == "create"){
 
-			sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
-			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
-			createNewFile(sPath,dPath);
+// 			sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
+// 			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+// 			createNewFile(sPath,dPath);
 
-		}else if(diffList[i].operationType == "delete"){
+// 		}else if(diffList[i].operationType == "delete"){
 
-			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
-			deleteFile(sPath,dPath);
+// 			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+// 			deleteFile(dPath);
 
-		}else if(diffList[i].operationType == "modify"){
+// 		}else if(diffList[i].operationType == "modify"){
 			
-			sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
-			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
-			updateFile(sPath,dPath);
+// 			sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
+// 			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+// 			updateFile(sPath,dPath);
 
-		}
-	}
+// 		}
+// 	}
 
-}
-
+// }
 
 int main(){
 
-	vector<compareSnapshotDS> diffList = compareSnapshotFile(sourcePath,destinationPath);
+	// vector<compareSnapshot> diffList = compareSnapshotFile(sourcePath,destinationPath);
 
-	bool flag = runTasks(diffList);
+	vector<compareSnapshot> diffList = compareSnapshotFile("./test/snapshot2.txt","./test/snapshot1.txt");
+
+	for(int i=0;i<diffList.size();i++)
+		cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+
+	// bool flag = runTasks(diffList);
 
 	return 0;
 

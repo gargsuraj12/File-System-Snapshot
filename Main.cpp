@@ -9,7 +9,11 @@
 
 using namespace std;
 
-#define MDPath "./MetaDataFile/snapshot_details.txt"
+#define MDPath "./MetaDataFile/All_snapshot_details.txt"
+#define MDPathLogFile "./LogFile/logfile.txt"
+#include "library.h"
+#include "initialCopy.h"
+#include "createSnapshot.h"
 
 struct SnapShotMetaDataInformation
 {
@@ -69,6 +73,19 @@ bool writeToEndOfFile(string Data)
 		std::ofstream out;
  		out.open(MDPath, std::ios::app);
  		out << Data;
+		out.close();
+	}
+	return success;
+}
+
+bool writeLog(string Data)
+{
+	bool success = false;
+	if(Data!="")
+	{
+		std::ofstream out;
+ 		out.open(MDPathLogFile, std::ios::app);
+ 		out << getCurrentTime() << ":" << Data << endl;
 		out.close();
 	}
 	return success;
@@ -166,6 +183,38 @@ bool checkExistenceOfSource(string sourceNameToCheck)
 	return false;
 }
 
+void performCopyOperation(string sourceParam,string destinationParam){
+	char cwd[PATH_MAX];
+	if (getcwd(cwd, sizeof(cwd)) != NULL) 
+	{
+		printf("Current working dir: %s\n", cwd);
+	}
+
+    char source[sourceParam.length()+1];
+    char destination[destinationParam.length()+1];
+    strcpy(source,sourceParam.c_str());strcpy(destination,destinationParam.c_str());
+    copy(source,destination,1);
+
+    chdir(cwd);
+}
+
+void performCreateSnapShotFileOperation(string sourceParam,string destinationParam){
+	char cwd[PATH_MAX];
+	if (getcwd(cwd, sizeof(cwd)) != NULL) 
+	{
+		printf("Current working dir: %s\n", cwd);
+	}
+
+    char source[sourceParam.length()+1];
+    char destination[destinationParam.length()+1];
+    strcpy(source,sourceParam.c_str());strcpy(destination,destinationParam.c_str());
+    
+    CreateSnapShotClass CreateSnapShotClassObject;
+    CreateSnapShotClassObject.prepareMetadataForSnapshot(source,destination,1);
+    CreateSnapShotClassObject.CreateSnapshotFile(source,destination);
+    chdir(cwd);
+}
+
 //110 Success With Addition into File 
 //120 Success With Removing of Snapshot 
 //130 Scuccess ; existence of Source Directory already in snapshot file 
@@ -180,18 +229,35 @@ int main(int argc,char *argv[])
 		// Make an Entry in .snapshot__metadata_file
 		struct SnapShotMetaDataInformation information = setDetailsOfMetaData(argv[2],argv[3]);
 		
+		/* TODO : REMPVE THOS COMMENT NITISH 
 		if(checkExistenceOfSource(argv[2])==true)
 		{	
 			printf("Already snapshot of this directory is getting Created\n");
 			return 130;
-		}
+		}*/
 
+		//$$$$$$$
+
+		// Step 1:  Perform Copy 
+		// Step 2 : Perform Createtion Of SnapShot File 
+		// Step 3 : Entry in snapshot_metadata file 
+
+		writeLog("Main : Creation of SnapShot File ");
+		performCreateSnapShotFileOperation(information.sourcePath,information.destinationPath);
+		writeLog("Main : Creation of SnapShot File : Complete ");
+
+		writeLog("Main : Performing Copy Operation ");
+		performCopyOperation(information.sourcePath,information.destinationPath);
+		writeLog("Main : Performing Copy Operation : Complete ");
+
+		writeLog("Main : Performing Entry in SnapShot Metadata File");
 		string data = PrepareData(information);
 		if(writeToEndOfFile(data)==true)
 		{
 			printf(" FIle Successfully Wirtten");
 			return 110;
-		}				
+		}
+		writeLog("Main : Performing Entry in SnapShot Metadata File : Complete ");				
 	}
 
 	if(strCommandName=="restoreSnapShot")
@@ -220,3 +286,10 @@ int main(int argc,char *argv[])
 	return 0;
 	
 }
+
+
+
+/*
+stopSnapshotScheduler "sourcePath"
+createSnapShot "sourcePath" "destinationPath"
+*/

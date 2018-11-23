@@ -1,0 +1,48 @@
+Fri Nov 23 17:50:58 2018
+:Main : Creation of SnapShot File 
+Fri Nov 23 17:50:58 2018
+:Main : Creation of SnapShot File : Complete 
+Fri Nov 23 17:50:58 2018
+:Main : Performing Copy Operation 
+Fri Nov 23 17:50:58 2018
+:Main : Performing Copy Operation : Complete 
+Fri Nov 23 17:50:58 2018
+:Main : Performing Entry in SnapShot Metadata File
+Fri Nov 23 17:50:58 2018
+:Main : Performing Entry in SnapShot Metadata File : Complete 
+Fri Nov 23 17:53:32 2018
+:Main : Creation of SnapShot File 
+Fri Nov 23 17:53:32 2018
+:Main : Creation of SnapShot File : Complete 
+Fri Nov 23 17:53:32 2018
+:Main : Performing Copy Operation 
+Fri Nov 23 17:53:33 2018
+:Main : Performing Copy Operation : Complete 
+Fri Nov 23 17:53:33 2018
+:Main : Performing Entry in SnapShot Metadata File
+Fri Nov 23 17:53:33 2018
+:Main : Performing Entry in SnapShot Metadata File : Complete 
+Fri Nov 23 17:56:09 2018
+:Main : Creation of SnapShot File 
+Fri Nov 23 17:56:09 2018
+:Main : Creation of SnapShot File : Complete 
+Fri Nov 23 17:56:09 2018
+:Main : Performing Copy Operation 
+Fri Nov 23 17:56:09 2018
+:Main : Performing Copy Operation : Complete 
+Fri Nov 23 17:56:09 2018
+:Main : Performing Entry in SnapShot Metadata File
+Fri Nov 23 17:56:09 2018
+:Main : Performing Entry in SnapShot Metadata File : Complete 
+Fri Nov 23 17:57:38 2018
+:Main : Creation of SnapShot File 
+Fri Nov 23 17:57:38 2018
+:Main : Creation of SnapShot File : Complete 
+Fri Nov 23 17:57:38 2018
+:Main : Performing Copy Operation 
+Fri Nov 23 17:57:38 2018
+:Main : Performing Copy Operation : Complete 
+Fri Nov 23 17:57:38 2018
+:Main : Performing Entry in SnapShot Metadata File
+Fri Nov 23 17:57:38 2018
+:Main : Performing Entry in SnapShot Metadata File : Complete 

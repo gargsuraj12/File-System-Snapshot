@@ -11,8 +11,8 @@
 // #include<dirent.h> // opendir() 
 // #include <sys/stat.h> // for stat
 
-#include "library.h"
-#include "HelperClass.h"
+// #include "library.h"
+// #include "HelperClass.h"
 
 
 using namespace std;
@@ -78,6 +78,7 @@ void copy_file(char * source , char * destination,char * filename){
 	////printf("file clsoed");
 }
 void copy(char * source , char * destination,int isFirst){
+    cout << "Incoming" << endl;
     if(isFirst){
         strcpy(temp,"");
     }
@@ -137,12 +138,12 @@ void copy(char * source , char * destination,int isFirst){
     }
 }
 
-int main(){
-    char source[256];
-    char destination[256];
-    cin>>source;
-    cin>>destination;
-    char temp[512];
-    getcwd(inicwd,sizeof(inicwd));
-    copy(source,destination,1);
-}
+// int main(){
+//     char source[256];
+//     char destination[256];
+//     cin>>source;
+//     cin>>destination;
+//     char temp[512];
+//     getcwd(inicwd,sizeof(inicwd));
+//     copy(source,destination,1);
+// }

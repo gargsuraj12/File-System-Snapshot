@@ -1,15 +1,21 @@
-#include<stdio.h>
-#include<iostream>
-#include<stdlib.h>
-#include<pwd.h>
-#include <vector>
-#include <time.h>
-#include <fstream>
-#include<string.h>
-#include<unistd.h> //for getcwd()
-#include<dirent.h> // opendir() 
-#include <sys/stat.h> // for stat
+// #include<stdio.h>
+// #include<iostream>
+// #include<stdlib.h>
+// #include<pwd.h>
+// #include <vector>
+// #include <time.h>
+// #include <fstream>
+// #include<string.h>
+// #include<unistd.h> //for getcwd()
+// #include<dirent.h> // opendir() 
+// #include <sys/stat.h> // for stat
 using namespace std;
+
+class CreateSnapShotClass
+{
+    
+public : 
+
 char temp[512];
 vector<string> entries;
 vector<string> owner;
@@ -17,12 +23,13 @@ vector<string> accesstime;
 vector<string> isfile;
 vector<string> accessrights;
 char inicwd[256];
+
 void printcwd(){
     char cwd[256];
     getcwd(cwd,sizeof(cwd));
     //printf("%s\n",cwd);
-
 }
+
 void prepareMetadataForSnapshot(char * source , char * destination,int isFirst){
     if(isFirst){
         strcpy(temp,"");
@@ -100,17 +107,21 @@ void CreateSnapshotFile(char * source,char * destination ){
     //fp =fopen("snapshot1.txt","w");
     //if(!fp)
     //cout<<"casdsa ";
+     //to be discussed with chitta
+
+    /*
     int chdirval = chdir(inicwd);
     if(chdir(inicwd)){
-        perror("invalid path");
+        perror("invali$$$$$$$d path");
         return;
     }
-    //to be discussed with chitta
+    */
     string str(destination);
     string path = str + "/.snapshot";
     // ofstream fout("snapshot1.txt");
     ofstream fout(path);
-    if (fout.is_open()){
+    if (fout.is_open())
+    {
     	time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     fout<<source<<endl<<destination<<endl;
@@ -127,15 +138,24 @@ void CreateSnapshotFile(char * source,char * destination ){
     //fclose(fp);
     fout.close();
     }
+    else
+    {
+        cout << "File Not Found" << endl;
+    }
 }
-int main(){
-    char source[256];
-    char destination[256];
-    cin>>source;
-    cin>>destination;
-    char temp[512];
-    getcwd(inicwd,sizeof(inicwd));
-    prepareMetadataForSnapshot(source,destination,1);
-    //cout<<"to write in file"<<endl<<endl;
-    CreateSnapshotFile(source,destination);
-}
+
+};
+
+// int main(){
+//     char source[256];
+//     char destination[256];
+//     cin>>source;
+//     cin>>destination;
+//     char temp[512];
+//     getcwd(inicwd,sizeof(inicwd));
+//     prepareMetadataForSnapshot(source,destination,1);
+//     //cout<<"to write in file"<<endl<<endl;
+//     CreateSnapshotFile(source,destination);
+// }
+
+

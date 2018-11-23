@@ -1,4 +1,0 @@
-SourcePath	DestinationPath	TimeStamp
-20	3	Tue Nov 20 04:49:36 2018
-25	3	Tue Nov 20 04:49:42 2018
-21	3	Tue Nov 20 04:50:42 2018

@@ -124,3 +124,15 @@ restoreSnapShot SourcePath
 
 stopSnashot sourcePath 
 
+
+
+------------------------------------Execution Sample For Modules ---------------
+
+Command on terminal : 
+
+createSnapShot /home/prakashjha/os/workarea/OS_Snapshot/repo /home/prakashjha/os/workarea/OS_Snapshot/repoSnapShot
+removeSnapShot /home/prakashjha/os/workarea/OS_Snapshot/repo 
+
+./createSnapshot 
+/home/prakashjha/os/workarea/OS_Snapshot/repo                                                     
+/home/prakashjha/os/workarea/OS_Snapshot/repoSnapShot

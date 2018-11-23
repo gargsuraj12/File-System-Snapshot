@@ -1,0 +1,2 @@
+SourcePath	DestinationPath	TimeStamp
+/home/prakashjha/os/workarea/OS_Snapshot/repo	/home/prakashjha/os/workarea/OS_Snapshot/repoSnapShot	Fri Nov 23 17:57:38 2018
