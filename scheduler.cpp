@@ -24,20 +24,53 @@ vector<struct SnapShotMetaDataInformation> CreateManifest()
 		{
 			for(auto itemContent : metadataContent)
 			{
-				//if(itemContent.lastRunTime>0)
+				vector<string> tC = split(itemContent.lastRunTime,"-");
+				int year;int month;int day;int hour; int min;int sec;
+				if(tC.size()>=6)
 				{
-					cout << itemContent.lastRunTime << endl;
+					year=stoi(tC[0]);month=stoi(tC[1]);day=stoi(tC[2]);
+					hour=stoi(tC[3]);min=stoi(tC[4]);sec=stoi(tC[5]);
+				} 
+				std::tm lastModifiedTime = make_tm(year,month,day,hour, min,sec);
+				std::tm* lastModifiedTimeptr = &lastModifiedTime;
+				std::time_t now = time(0);
+				// Convert now to tm struct for local timezone
+				std::tm* localtm = localtime(&now);
+
+				std::time_t time2 = std::mktime(lastModifiedTimeptr);
+				std::time_t time1 = std::mktime(localtm);
+
+				double portable_difference = std::difftime(time1, time2)*1000;
+				
+				cout << "Current Time" << time1 << endl; 				
+				cout << "From File " << time2 << endl;
+				cout << portable_difference << endl;
+
+				if(portable_difference>timeInterval)
+				{
+					cout << "Added : " << itemContent.lastRunTime << endl;
+					metadataToProcessForScheduler.push_back(itemContent);
 				}
-				metadataToProcessForScheduler.push_back(itemContent);
 			}
 		}
 		return metadataToProcessForScheduler;
 }
-
 bool endsWith(const std::string& s, const std::string& suffix)
 {
     return s.size() >= suffix.size() &&
            s.substr(s.size() - suffix.size()) == suffix;
+}
+
+std::tm make_tm(int year,int month,int day,int hour, int min,int sec)
+{
+    std::tm tm = {0};
+    tm.tm_year = year - 1900; // years count from 1900
+    tm.tm_mon = month - 1;    // months count from January=0
+    tm.tm_mday = day;         // days count from 1
+    tm.tm_hour = hour; // years count from 1900
+    tm.tm_min = min;    // months count from January=0
+    tm.tm_sec = sec;         // days count from 1
+    return tm;
 }
 
 std::vector<std::string> split(const std::string& s, const std::string& delimiter, const bool& removeEmptyEntries = false)
