@@ -14,7 +14,8 @@
 #include <bits/stdc++.h>
 
 #define MDPath "./MetaDataFile/All_snapshot_details.txt"
-#define timeInterval 1200000 //20 minutes
+//#define timeInterval 1200000 //20 minutes
+#define timeInterval 5 //20 minutes
 
 using namespace std;
 

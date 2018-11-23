@@ -250,7 +250,7 @@ int main(int argc,char *argv[])
 		string data = PrepareData(information);
 		if(writeToEndOfFile(data)==true)
 		{
-			printf(" FIle Successfully Wirtten");
+			printf(" FIle Successfully Written");
 			return 110;
 		}
 		writeLog("Main : Performing Entry in SnapShot Metadata File : Complete ");				
