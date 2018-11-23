@@ -114,8 +114,17 @@ void CreateSnapshotFile(char * source,char * destination ){
     	time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     fout<<source<<endl<<destination<<endl;
-    fout<<"snapshot created "<<tm.tm_year + 1900<<"\t"<< tm.tm_mon + 1
-    <<"\t"<< tm.tm_mday<<"\t"<< tm.tm_hour<<"\t"<< tm.tm_min<<"\t"<< tm.tm_sec<<endl;
+    fout<<"snapshot created "<<tm.tm_year + 1900<<" "<< tm.tm_mon + 1
+    <<" "<< tm.tm_mday<<" "<< tm.tm_hour<<" "<< tm.tm_min<<" "<< tm.tm_sec<<endl;
+    //fprintf(fp,"%s\n%s\n",source,destination );
+    //fprintf(fp,"snapshot created: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    int len = strlen(source);
+    for(int i=0;i<entries.size();i++){
+        string temp="";
+        for(int k = len ;k<entries[i].length();k++)
+            temp = temp + entries[i][k];
+        entries[i]=temp;
+    }
     //fprintf(fp,"%s\n%s\n",source,destination );
     //fprintf(fp,"snapshot created: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     for(int i=0;i<entries.size();i++){
