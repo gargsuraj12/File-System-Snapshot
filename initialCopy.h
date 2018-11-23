@@ -148,8 +148,14 @@ class CopyFunctionality
                     }
                     sd[k]='\0';
                     filen[j]='\0';
+                    strcpy(sd,destination);
+                    strcat(sd,"/");
+                    strcat(sd,filen);
                     cout<<"filen is "<<filen<<" and is loc is "<<sd<<endl;
-                    copy_file(sd,destination,filen);
+                    cp(sd,source);
+                    
+                    //cout<<"filen is "<<filen<<" and is loc is "<<sd<<endl;
+                    //copy_file(sd,destination,filen);
                     cout<<"path for file is "<<temppath<<endl;
                     //printf("is_reg file is %s\n",e->d_name);
                 }

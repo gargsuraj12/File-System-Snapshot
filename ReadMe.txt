@@ -56,6 +56,9 @@ PerformOperation()
 	modify
 	create-> copy 
 }
+
+to remove redundant file copy and delete operations from list
+
 -------------------
 Suraj :  
 

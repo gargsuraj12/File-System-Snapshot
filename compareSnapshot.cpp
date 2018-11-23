@@ -1,212 +1,396 @@
 #include "library.h"
 #include "HelperClass.h"
+#include "DeleteFile.h"
+#include "initialCopy.h"
 
 using namespace std;
 
-string SRCPATH = "";
-string DESTPATH = "";
+
+class SyncData{
+
+public:
+
+	string SRCPATH = "";
+	string DESTPATH = "";
 
 
-vector<struct snapshotDetails> readSnapshot(string path){
+	vector<struct snapshotDetails> readSnapshot(string path){
 
-	ifstream snapshotFile(path);
+		ifstream snapshotFile(path);
 
-	vector<struct snapshotDetails> detailsList;
+		vector<struct snapshotDetails> detailsList;
 
-	struct snapshotDetails listItem;
+		struct snapshotDetails listItem;
 
-	string line,sPath,dPath;
-	
-	int lineNo = 1;
+		string line,sPath,dPath;
+		
+		int lineNo = 1;
 
-	if(snapshotFile.is_open()){
+		if(snapshotFile.is_open()){
 
-		while(getline(snapshotFile,line)){
-
-			if(lineNo==1){
+			while(getline(snapshotFile,line)){
+				// cout<<"Line number: "<<lineNo<<" line: "<<line<<"\n";
+				if(lineNo==1){
+					
+					sPath = line;
+					SRCPATH = sPath;
 				
-				line = sPath;
-				SRCPATH = sPath;
-			
-			}else if(lineNo == 2){
+				}else if(lineNo == 2){
 
-				line = dPath;
-				DESTPATH = dPath;
+					dPath = line;
+					DESTPATH = dPath;
+					// cout<<"DESTPATH dfgkdfkgdlfg: "<<DESTPATH<<" liine no: "<<line<<"\n";
 
-			}else if(lineNo >= 4){
+				}else if(lineNo >= 4){
 
-				char *fileLine = new char [line.length()+1];
-				strcpy(fileLine, line.c_str());
-				
-				vector<string> tokens = split(fileLine,"\t");
-				
-				listItem.fullQualifiedPath = sPath +"/"+tokens[0];
-				listItem.ownership = tokens[1];
-				listItem.timeStamp = tokens[2];
-				listItem.accessRights = tokens[3];
+					char *fileLine = new char [line.length()+1];
+					strcpy(fileLine, line.c_str());
+					
+					vector<string> tokens = split(fileLine,"\t");
+					
+					// listItem.fullQualifiedPath = sPath +"/"+tokens[0];
+					if(tokens.size()>=5){
+						//Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
+						listItem.fullQualifiedPath = tokens[0];
 
-			}
+						if(tokens[1]=="file"){
+							listItem.isFile = true;
+						}else{
+							listItem.isFile = false;
+						}
 
-			detailsList.push_back(listItem);
-			lineNo ++;
-		}
-		snapshotFile.close();
-	}
-
-	return detailsList;
-}
-
-
-void replaceSnapshotFile(string sourcePath,string destinationPath){
-
-	ofstream destinationFile(destinationPath);
-
-	string line;
-
-	if (destinationFile.is_open()){
-
-		ifstream sourceFile(sourcePath);
-
-		if(sourceFile.is_open()){
-
-			while(getline(sourceFile,line)){
-
-				destinationFile << line;
-			}
-
-			sourceFile.close();
-
-		}else{
-
-			cout<<"Unable to open source file\n";
-		}
-
-		destinationFile.close();
-	}
-	else{
-		cout << "Unable to open destination file\n";	
-	} 
-}
-
-
-vector<struct compareSnapshot> compareSnapshotFile(string sourcePath,string destinationPath){
-
-	ifstream sourceSnapshot(sourcePath),destinationSnapshot(destinationPath);
-	
-	vector<struct snapshotDetails> sourceDetails, destinationDetails;
-
-	vector<struct compareSnapshot> diffList;
-	struct compareSnapshot listItem;
-
-	sourceDetails = readSnapshot(sourcePath);
-
-	destinationDetails = readSnapshot(destinationPath);
-
-	// cout<<"prakash\n";
-
-	bool isPresent = false;
-
-	for(int i = 0;i < sourceDetails.size();i++){
-
-		for(int j = 0;j< destinationDetails.size();j++){
-
-			if(sourceDetails[i].fullQualifiedPath == destinationDetails[j].fullQualifiedPath){
-
-				isPresent = true;
-
-				if(sourceDetails[i].timeStamp != destinationDetails[j].timeStamp){
-
-					// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
-					listItem.details = sourceDetails[i];
-					listItem.operationType = "modify";
-					diffList.push_back(listItem);
-					// free(listItem)
+						listItem.ownership = tokens[2];
+						listItem.accessRights = tokens[3];
+						listItem.timeStamp = tokens[4];
+						
+					}
 
 				}
-				break;
+
+				detailsList.push_back(listItem);
+				lineNo ++;
+			}
+			snapshotFile.close();
+		}
+
+		return detailsList;
+	}
+
+
+	void replaceSnapshotFile(string sourcePath,string destinationPath){
+
+		ofstream destinationFile(destinationPath);
+
+		string line;
+
+		if (destinationFile.is_open()){
+
+			ifstream sourceFile(sourcePath);
+
+			if(sourceFile.is_open()){
+
+				while(getline(sourceFile,line)){
+
+					destinationFile << line;
+				}
+
+				sourceFile.close();
+
+			}else{
+
+				cout<<"Unable to open source file\n";
 			}
 
+			destinationFile.close();
 		}
-
-		if(isPresent == false){
-
-			// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
-			listItem.details = sourceDetails[i];
-			listItem.operationType = "create";
-			diffList.push_back(listItem);
-			// free(listItem);
-		}
-		isPresent = false;
+		else{
+			cout << "Unable to open destination file\n";	
+		} 
 	}
 
-	for(int i=0;i<destinationDetails.size();i++){
+
+	vector<struct compareSnapshot> compareSnapshotFile(string sourcePath,string destinationPath){
+
+		ifstream sourceSnapshot(sourcePath),destinationSnapshot(destinationPath);
 		
-		for(int j=0;j<sourceDetails.size();j++){
+		vector<struct snapshotDetails> sourceDetails, destinationDetails;
 
-			if(destinationDetails[i].fullQualifiedPath == sourceDetails[j].fullQualifiedPath){
+		vector<struct compareSnapshot> diffList;
+		struct compareSnapshot listItem;
 
-				isPresent = true;
-				break;
-			}	
+		sourceDetails = readSnapshot(sourcePath);
+
+		destinationDetails = readSnapshot(destinationPath);
+
+		// cout<<"prakash\n";
+
+		bool isPresent = false;
+
+		for(int i = 0;i < sourceDetails.size();i++){
+
+			for(int j = 0;j< destinationDetails.size();j++){
+
+				// cout<<"source timestamp: "<<sourceDetails[i].timeStamp<<" \n";
+				// cout<<"Dest timestamp: "<<destinationDetails[j].timeStamp<<"\n";
+
+				if(sourceDetails[i].fullQualifiedPath == destinationDetails[j].fullQualifiedPath){
+
+					isPresent = true;
+
+					if(sourceDetails[i].timeStamp != destinationDetails[j].timeStamp){
+
+						// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
+						listItem.details = sourceDetails[i];
+						listItem.operationType = "modify";
+						diffList.push_back(listItem);
+						// free(listItem)
+
+					}
+					break;
+				}
+
+			}
+
+			if(isPresent == false){
+
+				// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
+				listItem.details = sourceDetails[i];
+				listItem.operationType = "create";
+				diffList.push_back(listItem);
+				// free(listItem);
+			}
+			isPresent = false;
 		}
 
-		if(isPresent == false){
+		for(int i=0;i<destinationDetails.size();i++){
+			
+			for(int j=0;j<sourceDetails.size();j++){
 
-			// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
-			listItem.details = destinationDetails[i];
-			listItem.operationType = "delete";
-			diffList.push_back(listItem);
-			// free(listItem);
+				if(destinationDetails[i].fullQualifiedPath == sourceDetails[j].fullQualifiedPath){
+
+					isPresent = true;
+					break;
+				}	
+			}
+
+			if(isPresent == false){
+
+				// listItem = (struct compareSnapshot*)malloc(sizeof(struct compareSnapshot));
+				listItem.details = destinationDetails[i];
+				listItem.operationType = "delete";
+				diffList.push_back(listItem);
+				// free(listItem);
+			}
+
+			isPresent = false;
 		}
 
-		isPresent = false;
+		//replaceSnapshotFile(sourcePath,destinationPath);
+
+		return diffList;
 	}
 
-	//replaceSnapshotFile(sourcePath,destinationPath);
-
-	return diffList;
-}
 
 
-// bool runTasks(vector<struct compareSnapshot> diffList){
+	bool runTasks(vector<struct compareSnapshot> diffList){
 
-// 	string dPath = "",sPath = "";
+		string dPath = "",sPath = "";
 
-// 	for(int i = 0;i<diffList.size();i++){
+		for(int i = 0;i<diffList.size();i++){
 
-// 		if(diffList[i].operationType == "create"){
+			if(diffList[i].operationType == "create"){
 
-// 			sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
-// 			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
-// 			createNewFile(sPath,dPath);
+				sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
+				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
 
-// 		}else if(diffList[i].operationType == "delete"){
+				CopyFunctionality copyFunctionalityObj;
 
-// 			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
-// 			deleteFile(dPath);
+				// if (diffList[i].details.fullQualifiedPath.find("/") != std::string::npos) {
+				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+				cout<<"sPath in create : "<<sPath<<"\n\n";
+				cout<<"dPath in create before : "<<dPath<<"\n";
+				// dPath = SplitFilename(dPath);
+				cout<<"dPath in create after : "<<dPath<<"\n";
 
-// 		}else if(diffList[i].operationType == "modify"){
+				// }					
 			
-// 			sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
-// 			dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
-// 			updateFile(sPath,dPath);
+				//cout<<"sPath in create : "<<sPath<<"\n";
+				// cout<<"dPath in create : "<<dPath<<"\n";
+				// int lastindex=0;
+				// for(int i=0;i<sPath.length();i++){
+				// 		if(sPath[i]=="/")
+				// 			lastindex = i;
+				// }
+				// string folder = "";
+				// folder = sPath.substr(lastindex+1,sPath.length());
+				if(diffList[i].details.isFile==false){
+					if (mkdir(toCharArrayFromString(dPath),0777) == -1)
+                        perror("cant do mkdir in compareSnapshot");	
+				}else{
+					dPath = SplitFilename(dPath);
+				}
+				
+				copyFunctionalityObj.copy(toCharArrayFromString(sPath),toCharArrayFromString(dPath),1);							
 
-// 		}
-// 	}
 
-// }
+
+
+			}else if(diffList[i].operationType == "delete"){
+
+				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+
+				DeleteFunctionality deleteFunctionalityObj;
+
+				cout<<"dPath in delete: "<<dPath<<"\n";
+
+				// char *path = toCharArrayFromString(dPath);
+				
+				// printf("Path: %s\n", path);
+
+				deleteFunctionalityObj.removedirectory(toCharArrayFromString(dPath));
+
+			}else if(diffList[i].operationType == "modify"){
+				
+				sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
+				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+
+				CopyFunctionality copyFunctionalityObj;
+
+				// if (diffList[i].details.fullQualifiedPath.find("/") != std::string::npos) {
+				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+				cout<<"sPath in modify : "<<sPath<<"\n\n";		
+				cout<<"dPath in modify before : "<<dPath<<"\n";
+				dPath = SplitFilename(dPath);
+				cout<<"dPath in modify after : "<<dPath<<"\n";
+
+				// }					
+			
+				// cout<<"sPath in modify : "<<sPath<<"\n";
+				// cout<<"dPath in modify : "<<dPath<<"\n";
+
+				copyFunctionalityObj.copy(toCharArrayFromString(sPath),toCharArrayFromString(dPath),1);							
+			}
+		}
+
+	}
+
+};
 
 int main(){
 
 	// vector<compareSnapshot> diffList = compareSnapshotFile(sourcePath,destinationPath);
+	SyncData obj;
+	vector<compareSnapshot> diffList = obj.compareSnapshotFile("./repo/.snapshot","./repoSnapShot/.snapshot");
 
-	vector<compareSnapshot> diffList = compareSnapshotFile("./test/snapshot2.txt","./test/snapshot1.txt");
+	obj.runTasks(diffList);
 
-	for(int i=0;i<diffList.size();i++)
+	for(int i=0;i<diffList.size();i++){
 		cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+	}
+
+
 
 	// bool flag = runTasks(diffList);
 
 	return 0;
 
 }
+
+
+/*
+	bool runTasks(vector<struct compareSnapshot> diffList){
+
+		string dPath = "",sPath = "";
+
+		for(int i = 0;i<diffList.size();i++){
+
+			if(diffList[i].operationType == "create"){
+
+				sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
+				dPath = DESTPATH+"/";//+diffList[i].details.fullQualifiedPath;	
+
+				if(diffList[i].details.isFile==true)
+				{
+					if (diffList[i].details.fullQualifiedPath.find("/") != std::string::npos) {
+						SplitFilename(sPath);
+					}					
+				}
+
+
+				// if (s1.find(s2) != std::string::npos) {
+				//     std::cout << "found!" << '\n';
+				// }
+
+
+				if(diffList[i].details.isFile==false){
+
+					if (diffList[i].details.fullQualifiedPath.find("/") != std::string::npos) {
+						dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+						SplitFilename(dPath);
+						SplitFilename(sPath);
+					}					
+				}
+
+				// if(
+				// diffList[i].details.isFile==false && 
+				// diffList[i].details.fullQualifiedPath.contains("/"))
+				// {
+				// 	dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+				// 	SplitFilename(dPath);
+				// }
+
+				CopyFunctionality copyFunctionalityObj;
+
+				// char *spath = toCharArrayFromString(sPath);
+				// char *dpath = toCharArrayFromString(dPath);
+
+				printf("spath: %s\n",sPath );
+				printf("dpath: %s\n",dPath );
+
+				//for file
+				if(diffList[i].details.isFile==true){
+					copyFunctionalityObj.copy_file(
+					toCharArrayFromString(sPath),
+					toCharArrayFromString(DESTPATH),
+					toCharArrayFromString(diffList[i].details.fullQualifiedPath));					
+				}else if(diffList[i].details.isFile==false){     //for directory
+					copyFunctionalityObj.copy(toCharArrayFromString(sPath),toCharArrayFromString(dPath),1);
+				} 
+				
+
+
+
+			}else if(diffList[i].operationType == "delete"){
+
+				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+
+				DeleteFunctionality deleteFunctionalityObj;
+
+				cout<<"DPATH: "<<dPath<<"\n";
+
+				char *path = toCharArrayFromString(dPath);
+				
+				printf("Path: %s\n", path);
+
+				deleteFunctionalityObj.removedirectory(path);
+
+			}else if(diffList[i].operationType == "modify"){
+				
+				sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
+				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
+
+				CopyFunctionality copyFunctionalityObj;
+
+				if(diffList[i].details.isFile==true){ 
+					//to be replaced by rsync functionality
+					copyFunctionalityObj.copy_file(                           
+					toCharArrayFromString(SRCPATH),
+					toCharArrayFromString(DESTPATH),
+					toCharArrayFromString(diffList[i].details.fullQualifiedPath));					
+				}
+
+			}
+		}
+
+	}
+*/

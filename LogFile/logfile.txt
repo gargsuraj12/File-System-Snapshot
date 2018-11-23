@@ -46,3 +46,15 @@ Fri Nov 23 17:57:38 2018
 :Main : Performing Entry in SnapShot Metadata File
 Fri Nov 23 17:57:38 2018
 :Main : Performing Entry in SnapShot Metadata File : Complete 
+Fri Nov 23 19:04:54 2018
+:Main : Creation of SnapShot File 
+Fri Nov 23 19:04:54 2018
+:Main : Creation of SnapShot File : Complete 
+Fri Nov 23 19:04:54 2018
+:Main : Performing Copy Operation 
+Fri Nov 23 19:04:54 2018
+:Main : Performing Copy Operation : Complete 
+Fri Nov 23 19:04:54 2018
+:Main : Performing Entry in SnapShot Metadata File
+Fri Nov 23 19:04:54 2018
+:Main : Performing Entry in SnapShot Metadata File : Complete 

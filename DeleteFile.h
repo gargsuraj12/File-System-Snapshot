@@ -18,7 +18,7 @@
 
 class DeleteFunctionality{
     public:
-        int removesingleFile(const char path[] ){
+        int removesingleFile(const char path[]){
             //char *full_path; 
             if (unlink(path) == 0)
             {

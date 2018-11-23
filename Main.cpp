@@ -15,12 +15,7 @@ using namespace std;
 #include "initialCopy.h"
 #include "createSnapshot.h"
 
-struct SnapShotMetaDataInformation
-{
-	string sourcePath;
-	string destinationPath;
-	string dateTimeStamp;
-};
+
 
 struct iequal
 {
@@ -193,8 +188,9 @@ void performCopyOperation(string sourceParam,string destinationParam){
     char source[sourceParam.length()+1];
     char destination[destinationParam.length()+1];
     strcpy(source,sourceParam.c_str());strcpy(destination,destinationParam.c_str());
-    copy(source,destination,1);
-
+    // copy(source,destination,1);
+    CopyFunctionality copyFunctionalityObj;
+    copyFunctionalityObj.copy(source,destination,1);
     chdir(cwd);
 }
 

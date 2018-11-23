@@ -29,7 +29,7 @@ class CopyFunctionality
         if (fd_from < 0)
             return -1;
 
-        fd_to = open(to, O_WRONLY | O_CREAT | O_EXCL, 0666);
+        fd_to = open(to, O_WRONLY | O_CREAT , 0666);
         if (fd_to < 0)
             goto out_error;
 
@@ -162,8 +162,12 @@ class CopyFunctionality
                     }
                     sd[k]='\0';
                     filen[j]='\0';
+                    strcpy(sd,destination);
+                    strcat(sd,"/");
+                    strcat(sd,filen);
                     cout<<"filen is "<<filen<<" and is loc is "<<sd<<endl;
-                    copy_file(sd,destination,filen);
+                    cp(sd,source);
+                    //copy_file(sd,destination,filen);
                     cout<<"path for file is "<<temppath<<endl;
                     //printf("is_reg file is %s\n",e->d_name);
                 }

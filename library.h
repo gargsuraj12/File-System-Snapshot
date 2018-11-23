@@ -1,19 +1,24 @@
-#include<stdio.h>
-#include<iostream>
-#include<stdlib.h>
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
 #include <fcntl.h> // for open()
-#include<pwd.h>
+#include <pwd.h>
 #include <vector>
 #include <time.h>
 #include <fstream>
-#include<string.h>
-#include<unistd.h> //for getcwd()
-#include<dirent.h> // opendir() 
+#include <string.h>
+#include <unistd.h> //for getcwd()
+#include <dirent.h> // opendir() 
 #include <sys/stat.h> // for stat
+#include <thread>  
+#include <bits/stdc++.h>
 
-#include<bits/stdc++.h>
+#define MDPath "./MetaDataFile/All_snapshot_details.txt"
+#define timeInterval 1200000 //20 minutes
 
 using namespace std;
+
+
 
 struct snapshotDetails{
 
@@ -21,6 +26,7 @@ struct snapshotDetails{
 	string ownership;
 	string timeStamp;
 	string accessRights;
+	bool isFile;          // 1 -> file else directory
 };
 
 struct compareSnapshot{
@@ -29,5 +35,12 @@ struct compareSnapshot{
 	string newTimeStamp;
 	string oldTimeStamp;
 	string operationType;
+};
 
+struct SnapShotMetaDataInformation
+{
+	string sourcePath;
+	string destinationPath;
+	string creationTimeStamp;
+	string lastRunTime;
 };

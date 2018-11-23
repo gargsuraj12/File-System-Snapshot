@@ -1,7 +1,34 @@
 /home/prakashjha/os/workarea/OS_Snapshot/repo
 /home/prakashjha/os/workarea/OS_Snapshot/repoSnapShot
-snapshot created 2018	11	23	17	57	38
-/home/prakashjha/os/workarea/OS_Snapshot/repo/Mid-II Exam Schedule-M18-V2.pdf	file	prakashjha	rw-rw-r--	Mon Oct  8 23:06:58 2018
-/home/prakashjha/os/workarea/OS_Snapshot/repo/BitTorrent.pdf	file	prakashjha	rw-rw-r--	Mon Nov 12 16:26:38 2018
-/home/prakashjha/os/workarea/OS_Snapshot/repo/snapshot_details.txt	file	prakashjha	rw-r--r--	Fri Nov 23 17:53:32 2018
-/home/prakashjha/os/workarea/OS_Snapshot/repo/project-code.pdf	file	prakashjha	rw-rw-r--	Sat Nov 10 05:47:48 2018
+snapshot created 2018 11 24 1 7 14
+.snapshot	file	prakashjha	rw-r--r--	Sat Nov 24 01:05:58 2018
+temp.txt	file	prakashjha	rw-rw-r--	Sat Nov 24 00:09:26 2018
+Unix V.pdf	file	prakashjha	rw-r--r--	Sat Nov 24 00:41:51 2018
+Pintos-master.zip	file	prakashjha	rw-rw-r--	Sat Oct 20 18:45:47 2018
+downloadOpac.png	file	prakashjha	rw-rw-r--	Tue Nov 13 22:21:02 2018
+mail	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:19 2018
+mail/asd	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:22 2018
+mail/asd/dd	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:33 2018
+mail/asd/dd/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
+mail/asd/dd/Unix IV.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/asd/dd/Unix VI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/asd/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
+mail/asd/Lab 01 Solutions.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
+mail/asd/asdddd	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:48 2018
+mail/asd/asdddd/Awk Tutorial(1).tar.gz	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
+mail/asd/asdddd/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
+mail/asd/asdddd/bash-scripting.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
+mail/asd/asdddd/junior-20180902T120333Z-001.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/asd/Unix II.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/asd/UnixI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/asd/Unix III.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/Awk Tutorial(1).tar.gz	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
+mail/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
+mail/bash-scripting.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
+mail/Lab 01 Solutions.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
+mail/Unix IV.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/Unix II.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/Unix VI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/UnixI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/junior-20180902T120333Z-001.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+mail/Unix III.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018

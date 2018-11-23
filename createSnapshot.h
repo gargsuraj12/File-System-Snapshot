@@ -91,7 +91,7 @@ void prepareMetadataForSnapshot(char * source , char * destination,int isFirst){
 
             }
             else if(S_ISREG(info.st_mode)){
-            	isfile.push_back("file");
+                isfile.push_back("file");
                 //printf("is_reg file is %s\n",e->d_name);
             }
             
@@ -122,7 +122,7 @@ void CreateSnapshotFile(char * source,char * destination ){
     ofstream fout(path);
     if (fout.is_open())
     {
-    	time_t t = time(NULL);
+        time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     fout<<source<<endl<<destination<<endl;
     fout<<"snapshot created "<<tm.tm_year + 1900<<" "<< tm.tm_mon + 1
@@ -132,7 +132,7 @@ void CreateSnapshotFile(char * source,char * destination ){
     int len = strlen(source);
     for(int i=0;i<entries.size();i++){
         string temp="";
-        for(int k = len ;k<entries[i].length();k++)
+        for(int k = len+1 ;k<entries[i].length();k++)
             temp = temp + entries[i][k];
         entries[i]=temp;
     }
