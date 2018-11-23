@@ -18,6 +18,25 @@ function checkC() {
 		
 }
 
+function runOnStart(){
+	echo "runOnStart"
+	isError=`echo 0`
+#bash /home/prakashjha/os/workarea/OS_Snapshot/.run.sh
+	if [ "$isError" == "0" ]
+	then
+		RUNCOMMAND=`cd /home/prakashjha/os/workarea/OS_Snapshot` 
+		
+		EXEC=`echo scheduler`
+		SRC=`echo scheduler.cpp`
+		if [ "$SRC" -nt "$EXEC" ]
+		then
+			echo "Rebuliding Class File Again"
+			$CC -o $EXEC $SRC
+		fi
+		RESULT=`./$EXEC`
+	fi			
+}
+
 function createSnapShot() {  
 	echo "createSnapShot"
 	isError=`echo 0`
@@ -113,3 +132,5 @@ function removeSnapShot() {
 		
 	fi	
 }
+
+runOnStart

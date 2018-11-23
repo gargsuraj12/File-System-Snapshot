@@ -1,5 +1,5 @@
 #include "compareSnapshot.h"
-
+#define MDSchedulerLogFilePath "./LogFile/SchedulerLog.txt"
 using namespace std;
 
 class Scheduler{
@@ -40,7 +40,7 @@ vector<struct SnapShotMetaDataInformation> CreateManifest()
 				std::time_t time2 = std::mktime(lastModifiedTimeptr);
 				std::time_t time1 = std::mktime(localtm);
 
-				double portable_difference = std::difftime(time1, time2)*1000;
+				double portable_difference = std::difftime(time1, time2);
 				
 				cout << "Current Time" << time1 << endl; 				
 				cout << "From File " << time2 << endl;
@@ -55,6 +55,28 @@ vector<struct SnapShotMetaDataInformation> CreateManifest()
 		}
 		return metadataToProcessForScheduler;
 }
+
+char * getCurrentTime()
+{
+    std::time_t result = std::time(nullptr);
+    return std::asctime(std::localtime(&result));
+}
+
+bool writeLog(string Data)
+{
+	bool success = false;
+	if(Data!="")
+	{
+		std::ofstream out;
+ 		out.open(MDSchedulerLogFilePath, std::ios::app);
+ 		string strDate(getCurrentTime());
+ 		out <<  strDate << ":" << Data << endl;
+		out.close();
+	}
+	return success;
+}
+
+
 bool endsWith(const std::string& s, const std::string& suffix)
 {
     return s.size() >= suffix.size() &&
@@ -131,14 +153,15 @@ vector<struct SnapShotMetaDataInformation> ProcessMetadataFileIntoCollection()
 
 int main(){
 
-	// while(true)
+
+	Scheduler schedulerObj;
+	while(true)
 	{
 
 		//checking metadata file
 		//firing thread for expired timestamp
 		
-		Scheduler schedulerObj;
-
+		schedulerObj.writeLog(" Scheduler Started ");
 		vector<SnapShotMetaDataInformation> snapShotToProcess;
 
 		snapShotToProcess = schedulerObj.CreateManifest();
@@ -146,15 +169,21 @@ int main(){
 		for(int i=0;i<snapShotToProcess.size();i++){
 
 			cout<<"Scheduler: "<<snapShotToProcess[i].sourcePath<<" "<<snapShotToProcess[i].destinationPath<<"\n";
-			//thread(processSnapShot,snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath).detach();	
+			//thread(schedulerObj.processSnapShot,snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath).detach();	
 
 		}
 		
 		// unsigned int microseconds = 1200000;
-		usleep(timeInterval);
+		schedulerObj.writeLog(" Scheduler About to Sleep ");
+
+		sleep(timeInterval);
+
+		schedulerObj.writeLog(" Scheduler Awaked ");
 	
 
 	}
+
+	schedulerObj.writeLog(" Scheduler Stopped ");
 
 	return 0;
 }
