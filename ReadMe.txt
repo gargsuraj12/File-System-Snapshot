@@ -15,6 +15,9 @@ op : List of Details of Folder and Files
 Get Metdata About Directory(Path)
 	recursively 
 
+permission handling needs to be done
+if file/folder exits then copy file/folder handling
+
 -------------------
 Nitish : 
 
