@@ -1,0 +1,13 @@
+
+
+Directory: ./jam
+
+omg3.txt
+c.MP4
+trying.cpp
+ok
+foo.cpp
+sdf.txt
+opps
+om
+a.out

@@ -1,0 +1,847 @@
+
+
+
+
+
+[ https://tinyurl.com/sample-txt ]
+
+
+
+
+
+
+		+----------------------------+
+		| Regular Expression (Regex) |
+		+----------------------------+
+
+
+ - A specific search pattern entered to find a particular target string.
+ - Is like a mathematical expression (operands + operators).
+ - Interpretted by the command, and not by the shell.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					+------+
+					| grep |
+					+------+
+“Globally (g) search a file for a regular expression (re) and print (p) the
+result.”
+
+
+
+Syntax:
+	
+		grep [options] 'pattern' file(s)
+
+
+
+	Some Options:
+
+		-A (after) 
+		-B (before)
+
+			ex: ifconfig | grep -B 1 "enp2s0"
+
+		-c (count # of matches)
+			Similar to piping a grep string 
+			to word count (wc program) grep’s 
+			built-in option can perform the
+			same for you
+
+			ex: ifconfig | grep -c "inet6"
+
+		-w (whole string match)
+			matches if exact string is present
+
+			ex: ifconfig | grep -w "RUNNING" (Vs) ifconfig | grep -w "RUN"
+
+		-i, --ignore-case
+			Ignore case distinctions in both 
+			the PATTERN and the input files. 
+
+			ex: ifconfig | grep -i "running" (Vs) ifconfig | grep "running"
+
+		
+		...and many more !
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		Can we pass string directly to grep instead of file(s) ? How ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		grep 'hello' <<< 'hello world'
+
+		or
+
+		str='hello all'
+		grep 'hello' <<< $str
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			+----------------------+
+			| Regex Metacharacters |
+			+----------------------+
+1) .
+
+	‘.’ matches any single character except the newline character (\n).
+	
+	Similar to the ‘?’ shell metacharacter.
+
+	Examples:
+
+	.
+	ab..
+	.ab.
+
+	grep 'r.' if.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2) *
+
+	‘*’ matches 0+ occurence of the immediately preceding character.
+	
+	The combination .* means “any or none” (same as the shell’s *).
+
+
+
+	Example:
+	
+	b*
+	bb*
+	s*printf
+	A.*Z
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3) [ ] (a.k.a Character Classes)
+	Matches any one of the enclosed characters within.
+	
+	Use hyphen (-) within it to specify range.
+	
+	Use caret (^) within it to negate a character class
+
+
+
+
+	Examples:
+
+	[bcf]ar
+	[a-zA-Z]*
+	xyz[^6-9]
+
+	grep '[pdf]o' if.txt
+
+	grep '[p-z]' if.txt
+
+	grep '[^p-z]' if.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4) Positional Markers:
++-----+------------------------------+
+|  ^  | matches beginning of a line. |
+|  $  |    matches end of a line.    |
+|  <  |   matches start of a word.   |
+|  >  |    matches end of a word.    |
++-----+------------------------------+
+
+
+
+
+Examples:
+	ls -l | grep '^d'
+	^$
+	grep '^bash' /usr/share/dict/words
+	grep 'shell$' /usr/share/dict/words
+	grep '\<computer' /usr/share/dict/words
+	grep 'computer\>' /usr/share/dict/words
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5) Basic Regular Expression(BRE):
+
+ - Asterisk/Kleene star (*) - matches 0+ occurence(s) of an expression.
+
+ 	ex: grep '7*' if.txt // note that 7 is not present in the given text
+
+ - Optional (\?) - matches 0 or 1 occurence of an expression.
+
+ 	ex: grep 'colou\?r' if.txt
+
+ - Alternation (\|) - matches either of the expressions it sits between.
+
+ 	ex: grep 'son\|hurt' if.txt
+
+ - Plus (\+) - matches 1+ occurrence(s) of an expression.
+
+ 	ex: grep 'ho\+ray' if.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6) Interval Regular Expressions (IRE):
+	{m} matches the preceding regex exactly ‘m’ times.
+
+		ex: grep 'ho\{2\}ray' if.txt
+	
+	{m,} matches the preceding regex atleast ‘m’ times.
+
+		ex: grep 'ho\{2,\}ray' if.txt
+	
+	{m,n} matches the preceding regex ‘m’ to ‘n’ times.
+
+		ex: grep 'ho\{2,5\}ray' if.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q. Write the regex metacharacters *, + and ? in this notation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A) * - \{0,\}
+   + - \{1,\}
+   ? - \{0,1\}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7) '(' and ')'  Grouping:
+	Used to group expressions together and match them.
+
+	ex: grep '\(If\)\|\(you\)' if.txt
+
+	Examples:
+	a\(bc\)*
+	an\(an\)\+
+	\(w\(xy\)\{2\}z\)\{2\}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8) The Save Metacharacter (Backreference): \1...\9
+
+	Copies a matched string to one of 9 buffers for later reference.
+	
+	The 1st matched text copied to buffer 1, the 2nd to buffer 2 ...
+
+
+	ex: grep '\(l\)\1' if.txt
+		
+
+	Example:
+	\([A-Z]\).*\1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9) Named Character Classes:
+
++-----------+-------------+
+|   Class   |   Same As   |
++-----------+-------------+
+| [:alnum:] | a-zA-Z0-9   |
+| [:alpha:] |  a-zA-Z     |
+| [:digit:] |    0-9      |
+| [:upper:] |    A-Z      |
+| [:lower:] |    a-z      |
+| [:space:] | spaces&tabs |
+| [:punct:] | Puntuations |
++-----------+-------------+
+
+
+	Example:
+
+	ls -l | grep '[[:digit:]]'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10) Extended Regular Expressions (EREs):
+ - No need to escape metacharacters.
+ - Thus, cleaner and more readable.
+ - Defines additional metacharacter sets.
+ - Use grep with the -E flag.
+
+
+	Example:
+	lgrep -E 'iii?t'
+	grep -E '(ha+){1,3}'
+
+fgrep:
+	The fgrep searches a file or list of files for a 
+	fixed pattern string. It is the same as grep –F. 
+	A common way of using fgrep is to pass a file of 
+	patterns to it:
+
+	fgrep –f file_full_of_patterns.txt file_to_search.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11) Greedy vs Lazy RE:
+
+ - A Greedy regex will consume as much as possible.
+ - A Lazy regex will match till the first occurrence of the pattern.
+ - Use a '?' to make an expression lazy.
+
+	Example:
+
+	add ? at the end of pattern to make it lazy
+
+	grep -P 'h.*l' <<< 'helolol'
+
+	grep -P 'h.*?l' <<< 'helolol'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		Test your Knowledge:
+
+1) Regex to match the following patterns:
+	a) cat, caat, caaa...at, etc
+	b) cat, ct, at, t
+	c) dog, Dog, dOg, DOG, dOG, etc
+
+2) Decode these Regexs:
+	a) grep "^mo.*ing$" /usr/share/dict/words
+	b) grep ‘[[:digit:]bc].*[^f-z]$’ /usr/share/dict/words
+
+3 From the /usr/share/dict/words file:
+	a) Find all words that begin and end with a vowel.
+	b) Find all five-character words that begin and end with a vowel.
+	c) Find all five-character words that begin and end with the same vowel.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					(╯°□°）╯ 
+		+------------------------------+
+		| Thank you for your Attention |
+		|           		           |
+		|	     Any Question?         |
+		+------------------------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		─────────────────────────────
+		──██████──████──████──██████─
+		──██──██──██────██──────██───
+		──█████───████──████────██───
+		──██──██──██──────██────██───
+		──██████──████──████────██───
+		─────────────────────────────
+		───████────────██████████────
+		──█    █─────███        ███──
+		───█    █──██              ██ 
+		────█    █─█    ██    ██    █
+		─────█   █─█    ██    ██    █
+		──██████████                █
+		─██        █                █
+		██   ███████   ██      ██   █
+		█          █    ████████    █
+		█          ██              ██
+		██   ███████─██          ██──
+		─██        █───██████████────
+		──█████████▀─────────────────
+		─────────────────────────────
+		────────██████──██████───────
+		────────██──██──██───────────
+		────────██──██──██████───────
+		────────██──██──██───────────
+		────────██████──██───────────
+		─────────────────────────────
+		██─────██──██──██████──██──██
+		██─────██──██──██──────██─██─
+		██─────██──██──██──────████──
+		██─────██──██──██──────██─██─
+		█████──██████──██████──██──██

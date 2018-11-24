@@ -1,0 +1,14 @@
+
+
+
+
+begin
+6 In the 1990s, Unix and Unix-like systems grew in popularity as BSD and Linux distributions were developed through collaboration by a worldwide network of programmers. In 2000, Apple released Darwin, also a Unix 
+7 unix unix Unix
+8 unixlinux
+9 system, which became the core of the Mac OS X operating system, which was later renamed macOS.
+10end
+
+11 unix
+12 mac
+

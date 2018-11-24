@@ -1,34 +1,158 @@
-/home/prakashjha/os/workarea/OS_Snapshot/repo
+/home/prakashjha/os/workarea/CheckRepo
 /home/prakashjha/os/workarea/OS_Snapshot/repoSnapShot
-snapshot created 2018 11 24 1 7 14
-.snapshot	file	prakashjha	rw-r--r--	Sat Nov 24 01:05:58 2018
-temp.txt	file	prakashjha	rw-rw-r--	Sat Nov 24 00:09:26 2018
-Unix V.pdf	file	prakashjha	rw-r--r--	Sat Nov 24 00:41:51 2018
-Pintos-master.zip	file	prakashjha	rw-rw-r--	Sat Oct 20 18:45:47 2018
-downloadOpac.png	file	prakashjha	rw-rw-r--	Tue Nov 13 22:21:02 2018
-mail	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:19 2018
-mail/asd	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:22 2018
-mail/asd/dd	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:33 2018
-mail/asd/dd/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
-mail/asd/dd/Unix IV.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/asd/dd/Unix VI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/asd/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
-mail/asd/Lab 01 Solutions.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
-mail/asd/asdddd	dir	prakashjha	rwxr-xr-x	Sat Nov 24 00:15:48 2018
-mail/asd/asdddd/Awk Tutorial(1).tar.gz	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
-mail/asd/asdddd/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
-mail/asd/asdddd/bash-scripting.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
-mail/asd/asdddd/junior-20180902T120333Z-001.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/asd/Unix II.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/asd/UnixI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/asd/Unix III.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/Awk Tutorial(1).tar.gz	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
-mail/Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
-mail/bash-scripting.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
-mail/Lab 01 Solutions.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:42 2018
-mail/Unix IV.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/Unix II.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/Unix VI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/UnixI.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/junior-20180902T120333Z-001.zip	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
-mail/Unix III.pdf	file	prakashjha	rw-rw-r--	Fri Nov 23 23:43:43 2018
+snapshot created 2018 11 24 21 52 27
+.snapshot	file	prakashjha	rw-r--r--	Sat Nov 24 21:52:27 2018
+downloadOpac_new.png	file	prakashjha	rw-r--r--	Sat Nov 24 00:08:34 2018
+IMG_20181004_140402.jpeg	file	prakashjha	r--------	Thu Oct  4 14:08:41 2018
+CreateSnowBall.c	file	prakashjha	rw-r--r--	Sat Nov 24 19:28:32 2018
+Videos	dir	prakashjha	rwxr-xr-x	Sat Nov 24 20:57:09 2018
+Videos/tar.gz	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:21:14 2018
+Videos/txt	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:31:24 2018
+Videos/txt/XewZVVBz.txt	file	prakashjha	rwxrwxrwx	Mon Aug 20 17:27:56 2018
+Videos/txt/temp.txt	file	prakashjha	rwxrwxrwx	Thu Sep 13 17:31:24 2018
+Videos/txt/omg.txt	file	prakashjha	rwxrwxrwx	Thu Sep 13 17:21:14 2018
+Videos/txt/sample.txt	file	prakashjha	rwxrwxrwx	Mon Aug 27 15:48:24 2018
+Videos/sh	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:31:24 2018
+Videos/sh/directoryCleaner.sh	file	prakashjha	rwxrwxrwx	Thu Sep 13 17:28:09 2018
+Videos/c	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:24:04 2018
+Videos/c/dir.c	file	prakashjha	rwxrwxrwx	Wed Aug 22 19:13:34 2018
+Videos/Mid-1 Exam Schedule-M18.pdf	file	prakashjha	rwxrwxrwx	Thu Aug 30 21:31:12 2018
+Videos/extension	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:11:03 2018
+Videos/APS - Monsoon 2018 Assignment 1.pdf	file	prakashjha	rwxrwxrwx	Thu Aug 30 20:21:32 2018
+Videos/Awk Tutorial(1).tar.gz	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:33:37 2018
+Videos/0.2.tar.bz2	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:24:04 2018
+Videos/0.2.tar.bz2/firefox-61.0.2.tar.bz2	file	prakashjha	rwxrwxrwx	Sat Sep  1 02:04:39 2018
+Videos/APS - Monsoon 2018 Assignment 1(1).pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 16:34:08 2018
+Videos/Cracking the Coding Interview.pdf	file	prakashjha	rwxrwxrwx	Sat Aug 18 15:14:30 2018
+Videos/VID-20170610-WA0002.mp4	file	prakashjha	rwxrwxrwx	Sat Jun 10 16:23:46 2017
+Videos/MONSOON-2018 DMA Marks - After CT1.pdf	file	prakashjha	rwxrwxrwx	Wed Aug 22 20:05:50 2018
+Videos/Unix V.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:31:39 2018
+Videos/test	dir	prakashjha	rwxrwxrwx	Sun Sep  2 02:50:40 2018
+Videos/test/ls_function.cpp	file	prakashjha	rwxrwxrwx	Tue Aug 28 23:09:12 2018
+Videos/test/14_functions.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 00:52:10 2018
+Videos/test/c.MP4	file	prakashjha	rwxrwxrwx	Fri Nov  4 11:22:58 2016
+Videos/test/XewZVVBz.txt	file	prakashjha	rwxrwxrwx	Mon Aug 20 17:27:56 2018
+Videos/test/assignment_1.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 19 14:20:12 2018
+Videos/test/OS_Assignment_1(1).pdf	file	prakashjha	rwxrwxrwx	Tue Aug 21 15:05:44 2018
+Videos/test/d.txt	file	prakashjha	rwxrwxrwx	Sat Sep  1 15:31:15 2018
+Videos/test/Beginning Linux Programming, 4 Ed.pdf	file	prakashjha	rwxrwxrwx	Wed Aug 22 14:29:26 2018
+Videos/test/foo.cpp	file	prakashjha	rwxrwxrwx	Fri Aug 31 14:40:40 2018
+Videos/test/OS_Assignment_1.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 17:12:20 2018
+Videos/test/dump.txt	file	prakashjha	rwxrwxrwx	Sat Sep  1 15:08:05 2018
+Videos/test/cal.MP4	file	prakashjha	rwxrwxrwx	Fri Nov  4 11:22:58 2016
+Videos/test/What Makes a Good Proof.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 00:24:04 2018
+Videos/test/'Cracking(1)	file	prakashjha	rwxrwxrwx	Sat Aug 18 23:25:36 2018
+Videos/test/a.txt	file	prakashjha	rwxrwxrwx	Sat Sep  1 02:41:20 2018
+Videos/jam	dir	prakashjha	rwxr-xr-x	Sat Nov 24 20:57:08 2018
+Videos/jam/omg3.txt	file	prakashjha	rwxrwxrwx	Sun Aug 26 19:12:58 2018
+Videos/jam/MP4	dir	prakashjha	rwxr-xr-x	Sat Nov 24 20:57:08 2018
+Videos/jam/MP4/c.MP4	file	prakashjha	rwxrwxrwx	Fri Nov  4 11:22:58 2016
+Videos/jam/MP4/cal.MP4	file	prakashjha	rwxrwxrwx	Fri Aug 31 17:46:36 2018
+Videos/jam/temp.txt	file	prakashjha	rwxrwxrwx	Fri Sep 14 15:36:32 2018
+Videos/jam/trying.cpp	file	prakashjha	rwxrwxrwx	Thu Aug 30 20:55:34 2018
+Videos/jam/ok	dir	prakashjha	rwxr-xr-x	Fri Aug 31 14:10:40 2018
+Videos/jam/Beginning Linux Programming, 4 Ed.pdf	file	prakashjha	rwxrwxrwx	Wed Aug 22 14:29:26 2018
+Videos/jam/foo.cpp	file	prakashjha	rwxrwxrwx	Fri Aug 31 15:25:23 2018
+Videos/jam/sdf.txt	file	prakashjha	rwxrwxrwx	Sat Sep  1 15:29:56 2018
+Videos/jam/out	dir	prakashjha	rwxr-xr-x	Sat Nov 24 20:57:09 2018
+Videos/jam/out/a.out	file	prakashjha	rwxrwxrwx	Thu Aug 30 20:49:50 2018
+Videos/jam/opps	dir	prakashjha	rwxr-xr-x	Thu Sep 13 19:08:34 2018
+Videos/jam/om	dir	prakashjha	rwxr-xr-x	Fri Aug 31 13:57:05 2018
+Videos/Beginning Linux Programming, 4 Ed.pdf	file	prakashjha	rwxrwxrwx	Wed Aug 22 14:29:26 2018
+Videos/06877270 (1).pdf	file	prakashjha	rwxrwxrwx	Tue Nov 13 02:23:01 2018
+Videos/'Cracking	file	prakashjha	rwxrwxrwx	Sat Aug 18 15:22:16 2018
+Videos/test2	dir	prakashjha	rwxrwxrwx	Tue Sep 11 03:22:25 2018
+Videos/Cracking the Coding Interview(1).pdf	file	prakashjha	rwxrwxrwx	Sat Aug 18 23:23:46 2018
+Videos/out	dir	prakashjha	rwxr-xr-x	Sat Nov 24 20:57:08 2018
+Videos/out/a.out	file	prakashjha	rwxrwxrwx	Wed Aug 22 19:16:16 2018
+Videos/Lab 01 Solutions.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:31:34 2018
+Videos/work	dir	prakashjha	rwxrwxrwx	Sun Sep  2 16:20:10 2018
+Videos/work/Application.cpp	file	prakashjha	rwxrwxrwx	Sun Sep  2 03:11:23 2018
+Videos/work/gotoFunction.cpp	file	prakashjha	rwxrwxrwx	Thu Aug 30 20:13:50 2018
+Videos/work/directoryListing.cpp	file	prakashjha	rwxrwxrwx	Sat Sep  1 03:24:44 2018
+Videos/work/normalMode.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 03:09:54 2018
+Videos/work/snapshot.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 20:38:57 2018
+Videos/work/makefile	file	prakashjha	rwxrwxrwx	Sun Sep  2 16:06:08 2018
+Videos/work/createDirectory.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 14:08:47 2018
+Videos/work/searchFile.cpp	file	prakashjha	rwxrwxrwx	Sat Sep  1 03:24:44 2018
+Videos/work/removeDirectory.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 03:28:31 2018
+Videos/work/fileOpen.h	file	prakashjha	rwxrwxrwx	Sat Sep  1 14:32:50 2018
+Videos/work/snapshot	file	prakashjha	rwxrwxrwx	Sun Sep  2 16:13:31 2018
+Videos/work/snapshot.cpp	file	prakashjha	rwxrwxrwx	Sun Sep  2 16:13:24 2018
+Videos/work/deleteFile.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 03:42:20 2018
+Videos/work/searchFile.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 21:03:29 2018
+Videos/work/createFile.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 03:15:04 2018
+Videos/work/openFile.cpp	file	prakashjha	rwxrwxrwx	Fri Aug 31 20:39:00 2018
+Videos/work/moveFile.cpp	file	prakashjha	rwxrwxrwx	Tue Aug 28 02:32:26 2018
+Videos/work/copyFile.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 15:23:53 2018
+Videos/work/deleteFolder.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 03:11:11 2018
+Videos/work/README.md	file	prakashjha	rwxrwxrwx	Sat Sep  1 03:24:44 2018
+Videos/work/createDirectory.cpp	file	prakashjha	rwxrwxrwx	Fri Aug 31 14:07:41 2018
+Videos/work/driverProgram.cpp	file	prakashjha	rwxrwxrwx	Sat Sep  1 03:24:44 2018
+Videos/work/listDirectory.cpp	file	prakashjha	rwxrwxrwx	Thu Aug 30 21:50:20 2018
+Videos/work/renameFile.h	file	prakashjha	rwxrwxrwx	Fri Aug 31 03:26:04 2018
+Videos/work/headerFiles.h	file	prakashjha	rwxrwxrwx	Sat Sep  1 02:31:44 2018
+Videos/What Makes a Good Proof.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 00:24:04 2018
+Videos/Unix IV.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:31:14 2018
+Videos/Research Intern.pdf	file	prakashjha	rwxrwxrwx	Fri Aug 24 21:41:10 2018
+Videos/Unix II.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:31:07 2018
+Videos/Unix VI.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:31:45 2018
+Videos/test1	dir	prakashjha	rwxrwxrwx	Tue Sep 11 03:22:20 2018
+Videos/'Cracking(1)	file	prakashjha	rwxrwxrwx	Sat Aug 18 23:25:36 2018
+Videos/directoryCleaner.sh	file	prakashjha	rwxrwxrwx	Thu Sep 13 19:11:53 2018
+Videos/pdf	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:24:04 2018
+Videos/pdf/C++3elatest.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:35:02 2018
+Videos/pdf/DiscreteStructures.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:33:48 2018
+Videos/pdf/ICPC.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 20:14:40 2018
+Videos/pdf/resumePrakash.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 16:48:04 2018
+Videos/pdf/mcs.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:41:54 2018
+Videos/pdf/14_functions.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 00:52:10 2018
+Videos/pdf/assignment_1.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 19 14:20:12 2018
+Videos/pdf/OS_Assignment_1(1).pdf	file	prakashjha	rwxrwxrwx	Tue Aug 21 15:05:44 2018
+Videos/pdf/mozilla.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 01:11:04 2018
+Videos/pdf/ods-java.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:36:40 2018
+Videos/pdf/assignment_2.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:39:08 2018
+Videos/pdf/OS_Assignment_1.pdf	file	prakashjha	rwxrwxrwx	Mon Aug 20 17:12:20 2018
+Videos/pdf/ods-cpp.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:36:24 2018
+Videos/pdf/An_Introduction_to_GCC.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:28:34 2018
+Videos/pdf/everything.pdf	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:41:44 2018
+Videos/pdf/UnixI.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:31:53 2018
+Videos/gz	dir	prakashjha	rwxr-xr-x	Sat Nov 24 20:57:09 2018
+Videos/gz/2018201013.gz	file	prakashjha	rwxrwxrwx	Mon Sep  3 19:42:53 2018
+Videos/zip	dir	prakashjha	rwxrwxrwx	Thu Sep 13 17:24:04 2018
+Videos/zip/bitmap.zip	file	prakashjha	rwxrwxrwx	Wed Aug 29 04:47:22 2018
+Videos/zip/makefile_example.zip	file	prakashjha	rwxrwxrwx	Wed Aug 22 18:33:00 2018
+Videos/zip/Assignment-1(1).zip	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:33:59 2018
+Videos/zip/bash-scripting.zip	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:33:44 2018
+Videos/zip/Assignment-1.zip	file	prakashjha	rwxrwxrwx	Sat Sep  1 20:16:51 2018
+Videos/zip/latest-r1991.zip	file	prakashjha	rwxrwxrwx	Sun Aug 26 13:41:38 2018
+Videos/zip/junior-20180902T120333Z-001.zip	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:34:20 2018
+Videos/zip/mail.zip	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:35:39 2018
+Videos/zip/makefile_example(1).zip	file	prakashjha	rwxrwxrwx	Wed Aug 29 15:32:40 2018
+Videos/test2.sh	file	prakashjha	rwxrwxrwx	Fri Sep 14 15:35:30 2018
+Videos/Unix III.pdf	file	prakashjha	rwxrwxrwx	Sun Sep  2 17:31:00 2018
+Videos/Awk Tutorial.tar.gz	file	prakashjha	rwxrwxrwx	Thu Aug 23 16:38:34 2018
+snowball.c	file	prakashjha	rw-r--r--	Sat Nov 24 19:25:31 2018
+inside1	dir	prakashjha	rwxrwxr-x	Sat Nov 24 19:47:31 2018
+inside1/CreateSnowBall.c	file	prakashjha	rw-r--r--	Sat Nov 24 19:26:11 2018
+inside1/inside2	dir	prakashjha	rwxr-xr-x	Sat Nov 24 19:24:10 2018
+inside1/inside2/CreateSnowBall.c	file	prakashjha	rw-r--r--	Thu Oct 25 03:03:48 2018
+inside1/Unix V.pdf	file	prakashjha	rw-r--r--	Sat Nov 24 00:16:26 2018
+inside1/GreyCoders.pdf	file	prakashjha	rw-rw-r--	Sat Nov 10 02:07:33 2018
+inside1/Assignment3Report.docx	file	prakashjha	rw-rw-r--	Sat Nov 24 19:25:52 2018
+inside1/Assignment3Report.pdf	file	prakashjha	rw-rw-r--	Wed Oct 24 19:44:45 2018
+GreyCoders.pdf	file	prakashjha	rw-rw-r--	Sat Nov 10 02:07:33 2018
+empty_created	dir	prakashjha	rwxr-xr-x	Sat Nov 24 19:45:57 2018
+empty_created/inside1	dir	prakashjha	rwxrwxr-x	Sat Nov 24 19:26:11 2018
+empty_created/inside1/CreateSnowBall.c	file	prakashjha	rw-r--r--	Sat Nov 24 19:26:11 2018
+empty_created/inside1/inside2	dir	prakashjha	rwxr-xr-x	Sat Nov 24 19:24:10 2018
+empty_created/inside1/inside2/CreateSnowBall.c	file	prakashjha	rw-r--r--	Thu Oct 25 03:03:48 2018
+empty_created/inside1/Unix V.pdf	file	prakashjha	rw-r--r--	Sat Nov 24 00:16:26 2018
+empty_created/inside1/GreyCoders.pdf	file	prakashjha	rw-rw-r--	Sat Nov 10 02:07:33 2018
+empty_created/inside1/2018201013.zip	file	prakashjha	rw-r--r--	Tue Sep 11 20:41:13 2018
+empty_created/inside1/Assignment3Report.docx	file	prakashjha	rw-rw-r--	Sat Nov 24 19:25:52 2018
+empty_created/2018201013.zip	file	prakashjha	rw-r--r--	Tue Sep 11 20:41:13 2018
+empty_created/Assignment3Report.docx	file	prakashjha	rw-rw-r--	Sat Nov 24 19:24:56 2018
+2018201013.zip	file	prakashjha	rw-r--r--	Tue Sep 11 20:41:13 2018
+Assignment3Report.docx	file	prakashjha	rw-rw-r--	Sat Nov 24 19:24:56 2018
+Assignment3Report.pdf	file	prakashjha	rw-rw-r--	Wed Oct 24 19:44:45 2018
