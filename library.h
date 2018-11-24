@@ -13,14 +13,24 @@
 #include <thread>
 #include <pthread.h>  
 #include <bits/stdc++.h>
+#include <sstream>
+#include <openssl/md5.h>
+#include <openssl/sha.h>
+
 
 #define MDPath "./MetaDataFile/All_snapshot_details.txt"
+#define MDPathLogFile "./LogFile/logfile.txt"
 //#define timeInterval 1200000 //20 minutes
 #define timeInterval 15 //5sec
+#define MODVAL 1048576
+// static const string DELIM = "$";
 
 using namespace std;
 
-
+// struct checksumValues{
+//     int r1,r2;
+//     string checksum;
+// };
 
 struct snapshotDetails{
 
@@ -39,6 +49,7 @@ struct compareSnapshot{
 	string operationType;
 };
 
+//redefined in Main.cpp
 struct SnapShotMetaDataInformation
 {
 	string sourcePath;

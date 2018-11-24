@@ -1,6 +1,5 @@
 #include "compareSnapshot.h"
 
-
 #define MDSchedulerLogFilePath "./LogFile/SchedulerLog.txt"
 
 using namespace std;

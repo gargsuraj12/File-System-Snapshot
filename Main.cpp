@@ -10,12 +10,20 @@
 using namespace std;
 
 #define MDPath "./MetaDataFile/All_snapshot_details.txt"
-#define MDPathLogFile "./LogFile/logfile.txt"
-#include "library.h"
+// #define MDPathLogFile "./LogFile/logfile.txt"
+// #include "library.h"
 #include "initialCopy.h"
 #include "createSnapshot.h"
 
 
+
+struct SnapShotMetaDataInformation
+{
+	string sourcePath;
+	string destinationPath;
+	string creationTimeStamp;
+	string lastRunTime;
+};
 
 struct iequal
 {

@@ -1,0 +1,25 @@
+Neil Matthew has been interested in and has programmed ccomputers since 1974. A mathematics graduate
+from the University of Nottingham, Neil is just plain keen on programming languages and likes to explore
+new ways of solving computing problems. He’s written systems to program in BCPL, FP (Functional
+Programming), Lisp, Prolog, and a structured BASIC. He even wrote a 6502 microprocessor emulator to
+<--inserted-->
+l around the world, corresponding almost exclusively over the Internet.
+From an initial kernel that partially implemented a small subset of the UNIX
+system service
+run BBC microcomputer programs on UNIX systems.
+In terms of UNIX experience, Neil has used almost every flavor since the late 1970s, including BSD
+UNIX, AT&T System V, Sun Solaris, IBM AIX, many others, and of course Linux.
+Neil can claim to have been using Linux since August 1993 when he acquired a floppy disk distribution
+<--deleted-->
+hacking C, C++, Icon, Prolog, Tcl, and Java at home and at work.
+Most of Neil’s “home” projects were originally developed using SCO UNIX, but they’ve all ported to
+Linux with little or no trouble. He says Linux is much easier because it supports quite a lot of features
+from other systems, so that both BSD- and System V–targeted programs will generally compile with
+little or no change.
+As the head of software and principal engineer at Camtec Electronics in the 1980s, Neil programmed
+<--inserted-->
+new feature was networking: 1.0 included support for UNIX ’s
+standard TCP/I
+in C and C++ for real-time embedded systems. Since then he’s worked on software development tech-
+niques and quality assurance. After a spell as a consultant with Scientific Generics he is currently work-
+ing as a systems architect with Celesio AG.

@@ -1,14 +1,4 @@
-// #include<stdio.h>
-// #include<iostream>
-// #include<stdlib.h>
-// #include<pwd.h>
-// #include <vector>
-// #include <time.h>
-// #include <fstream>
-// #include<string.h>
-// #include<unistd.h> //for getcwd()
-// #include<dirent.h> // opendir() 
-// #include <sys/stat.h> // for stat
+
 using namespace std;
 
 class CreateSnapShotClass

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CC=g++
+CC=g++ 
 EXEC=classfileName
 SRC=sourcefileName
 # prints the input
@@ -38,7 +38,7 @@ function runOnStart(){
 }
 
 function createSnapShot() {  
-	echo "createSnapShot"
+	echo "XXXXcreateSnapShot"
 	isError=`echo 0`
 
 	if [ "$#" -lt "2" ]
@@ -51,12 +51,13 @@ function createSnapShot() {
 	if [ "$isError" == "0" ]
 	then
 		EXEC=`echo Main`
-		SRC=`echo Main.cpp`
-		if [ "$SRC" -nt "$EXEC" ]
-		then
-			echo "Rebuliding Class File Again"
-			$CC -o $EXEC $SRC
-		fi
+		SRC=`echo Main.cpp -lcrypto`
+		echo "$SRC"
+		#if [ "$SRC" -nt "$EXEC" ]
+		#then
+			echo "XXXX Rebuliding Class File Again"
+			$CC -o $EXEC $SRC 
+		#fi
 		RESULT=`./$EXEC createSnapShot $1 $2`
 		#echo $RESULT
 		if [ "$RESULT" = 110 ]
@@ -133,4 +134,4 @@ function removeSnapShot() {
 	fi	
 }
 
-runOnStart
+#runOnStart

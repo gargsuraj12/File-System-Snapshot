@@ -1,6 +1,21 @@
 
 using namespace std;
 
+/*
+bool writeLog(string Data)
+{
+  bool success = false;
+  if(Data!="")
+  {
+    std::ofstream out;
+    out.open(MDPathLogFile, std::ios::app);
+    out << getCurrentTime() << ":" << Data << endl;
+    out.close();
+  }
+  return success;
+}
+*/
+
 char* toCharArrayFromString(string str){
 
     // char charStr[str.length()+1];

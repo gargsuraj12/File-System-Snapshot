@@ -1,8 +1,54 @@
+//#include "rsync.h"
+//#include "library.h"
+
+#include<stdio.h>
+#include<iostream>
+#include<stdlib.h>
+#include <fcntl.h> // for open()
+#include<pwd.h>
+#include <vector>
+#include <time.h>
+#include <fstream>
+#include<string.h>
+#include<unistd.h> //for getcwd()
+#include<dirent.h> // opendir() 
+#include <sys/stat.h> // for stat
+#include <string>
+
+using namespace std;
+
+
+
+#define MDPathLogFile "./LogFile/logfile.txt"
+
 class CopyFunctionality
 {
     public:
         char temp[512];
         char inicwd[256];
+
+        char masterCopyLocation[512];
+
+    bool writeLog(string Data)
+    {
+        bool success = false;
+        if(Data!="")
+        {
+            ///home/prakashjha/os/workarea/OS_Snapshot/LogFile
+            std::ofstream out;
+            out.open("/home/prakashjha/os/workarea/OS_Snapshot/LogFile/logfile.txt", std::ios::app);
+            out << getCurrentTime() << ":" << Data << endl;
+            out.close();
+        }
+        return success;
+    }  
+    
+    char * getCurrentTime()
+    {
+        std::time_t result = std::time(nullptr);
+        return std::asctime(std::localtime(&result));
+    }
+
 
     int cp(const char *to, const char *from)
     {
@@ -117,6 +163,15 @@ class CopyFunctionality
         ////printf("file clsoed");
     }
     void copy(char * source , char * destination,int isFirst){
+         writeLog("Start Of copy: &&&&&&&&&&&&&&&&&&7");
+
+        if (getcwd(masterCopyLocation, sizeof(masterCopyLocation)) != NULL) 
+        {
+            writeLog("Location Of File");
+            writeLog(masterCopyLocation);
+        }
+
+
         if(isFirst){
             strcpy(temp,"");
         }
@@ -128,6 +183,10 @@ class CopyFunctionality
             if(!stat(temppath,&infofile)){
                 if(S_ISREG(infofile.st_mode)){
                     //copy_file(source,destination,e->d_name);
+
+                    writeLog("Location Of File 2");
+                    writeLog(masterCopyLocation);
+                    
                     int lastindex = 0;
                     for(int i=0;i<strlen(temppath);i++){
                         if(temppath[i]=='/')
@@ -146,6 +205,11 @@ class CopyFunctionality
                             k++;
                         }
                     }
+
+                    writeLog("Location Of File 3");
+                    writeLog(masterCopyLocation);
+                    
+
                     sd[k]='\0';
                     filen[j]='\0';
                     strcpy(sd,destination);
@@ -153,6 +217,23 @@ class CopyFunctionality
                     strcat(sd,filen);
                     cout<<"filen is "<<filen<<" and is loc is "<<sd<<endl;
                     cp(sd,source);
+                   
+                   // writeLog("Chunk size of file is: "+chunkSize);
+                    writeLog("Location Of File XXXX");
+                    writeLog(masterCopyLocation);
+                     writeLog("Chunk size of file is: &&&&&&&&&&&&&&&&&&7");
+
+                    string str1(sd);
+
+
+                    // int chunkSize = ceil(sqrt(infofile.st_size));
+                    // cout<<"Chunk size of file is: "<<chunkSize<<endl;
+                    
+                    writeLog("full path for rsync "+str1);
+                    cout<<"full path for rsync "<<sd<<endl;
+                    
+                    // Rsync rObj;
+                    // rObj.prepareIndexOfBackupFile(sd,chunkSize);
                     
                     //cout<<"filen is "<<filen<<" and is loc is "<<sd<<endl;
                     //copy_file(sd,destination,filen);
@@ -202,7 +283,31 @@ class CopyFunctionality
                 }
                 else if(S_ISREG(info.st_mode)){
                     //copy_file(source,destination,e->d_name);
+
+                    writeLog("Location Of File Before copy ");
+                    writeLog(masterCopyLocation);
+                    
+                    
                     cp(dpath,path);
+
+                   // writeLog("Chunk size of file is: "+chunkSize);
+                    writeLog("Location Of File YYYY");
+                    writeLog(masterCopyLocation);
+                     writeLog("Chunk size of file is: &&&&&&&&&&&&&&&&&&7");
+
+
+                    // int chunkSize = ceil(sqrt(info.st_size));
+                    // cout<<"Chunk size of file is: "<<chunkSize<<endl;
+                    
+
+                    string str1(dpath);
+
+                    writeLog("full path for rsync "+str1);
+                    //cout<<"full path for rsync "<<sd<<endl;
+                    // Rsync rObj;
+                    // rObj.prepareIndexOfBackupFile(dpath,chunkSize);
+                    
+
                     cout<<"path for file is "<<path<<endl;
                     //printf("is_reg file is %s\n",e->d_name);
                 }
