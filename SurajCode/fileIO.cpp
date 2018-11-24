@@ -4,11 +4,13 @@
 #include <cstring>
 #include <vector>
 #include <openssl/sha.h>
+#include <openssl/md5.h>
 
 using namespace std;
 
-vector<string> splitLine(string line, string delimiter)
-{
+#define CHUNKSIZE 524288
+
+vector<string> splitLine(string line, string delimiter){
     vector<string> splitV;
     string token;
     int index = line.find(delimiter);
@@ -26,8 +28,7 @@ vector<string> splitLine(string line, string delimiter)
     return splitV;
 }
 
-void getFileHash(char *fileName)
-{
+void getFileHash(char *fileName){
 
     unsigned char result[2 * SHA_DIGEST_LENGTH];
     unsigned char hash[SHA_DIGEST_LENGTH];
@@ -67,9 +68,68 @@ void getFileHash(char *fileName)
     fclose(f);
 }
 
-int main()
-{
-    getFileHash("Id.jpg");
+string calcHash(char *chunk){
+    // unsigned char digest[SHA_DIGEST_LENGTH+1] = {0};
+    unsigned char digest[MD5_DIGEST_LENGTH+1] = {0};
+	string retHash;
+    size_t length = strlen(chunk);
+    // if(length <= 0){
+    //     cout<<"Hash cannot be calculated for empty string.."<<endl;
+    //     return "";
+    // }
+	// SHA1((unsigned char*)chunk, length, (unsigned char*)&digest);
+    MD5((unsigned char *)chunk, length, (unsigned char *)&digest);
+	// if(strlen((char *)digest) == 0){
+	// 	cout<<"Unable to calculate hash"<<endl;
+	// 	return "";
+	// }
+    // char mdString[(SHA_DIGEST_LENGTH*2)+1] = {0};
+   char mdString[(MD5_DIGEST_LENGTH*2)+1] = {0};
+   for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
+        sprintf((char *)&mdString[i*2], "%02x", (unsigned int)digest[i]);
+	}
+	retHash = mdString;
+    memset(mdString, 0, sizeof(mdString));
+    memset(digest, 0, sizeof(digest));
+	return retHash;
+}
+
+
+
+
+int main(){
+
+    string filename = "Linux_bak.pdf.index";
+    FILE *fp = fopen((char *)filename.c_str(), "rb");
+    if(fp == NULL){
+        cout<<"Unable to open- "<<filename<<endl;
+        return -1;
+    }
+    char *line = NULL;
+    size_t len = 0;
+    while(getline(&line, &len, fp) != -1){
+        cout<<line;
+    }
+    fclose(fp);
+
+    // cout<<"SHA_DIGEST_LENGTH: "<<SHA_DIGEST_LENGTH<<endl;
+    // string filename = "/home/suraj/Desktop/Movies/BhaagMilkhaBhaag.mkv";
+    // FILE *fp = fopen((char *)filename.c_str(),"rb");
+    // if(fp==NULL){
+    //     printf("File open error");
+    //     return -1;   
+    // }
+    // unsigned int i=1;
+    // char data[CHUNKSIZE+1]={0};
+    // while(fread(data, 1, CHUNKSIZE, fp) > 0){//fgets (data , CHUNKSIZE , fp)
+    //     string hash = calcHash(data);
+    //     cout<<i<<". SHA1 hash is: "<<hash<<endl;
+	// 	memset(data,0,sizeof(data));
+    //     i++;
+    // }
+    // fclose(fp);
+
+    // getFileHash("Id.jpg");
     // FILE *fr, *fw;
     // char block[100]= {0};
     // fr = fopen("df.txt.bak", "rb");

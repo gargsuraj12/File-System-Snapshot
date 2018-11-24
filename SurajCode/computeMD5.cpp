@@ -13,7 +13,7 @@
 using namespace std;
 
 #define MODVAL 1048576
-static const int CHUNKSIZE  = 524288;
+static const int CHUNKSIZE  = 3412;
 static const string DELIM = "$";
 // static const string END_DELIM = "$|";
 
@@ -58,36 +58,17 @@ int checkValidIndex(string line, string delimeter){
 
 //Calculates MD5 hash for the given data chunk
 string calcMD5(char *chunk){
-    // cout<<"Chunk for MD5 is: "<<chunk<<" and len of chunk is: "<<strlen(chunk)<<endl;
-    // unsigned char digest[MD5_DIGEST_LENGTH];
-    // string checksum;
-    // MD5((unsigned char *)chunk, strlen(chunk), (unsigned char *)&digest);
-    // if(strlen((char *)digest) == 0){
-	// 	cout<<"Unable to calculate MD5 hash.."<<endl;
-	// 	return "";
-	// }
-    // char mdString[MD5_DIGEST_LENGTH*2+1];
-    // for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
-    //     sprintf(&mdString[i*2], "%02x", (unsigned int)digest[i]);
-	// }
-    // checksum = mdString;
-    // return checksum;
-    // SHA_CTX mdContent;
-    unsigned char digest[SHA_DIGEST_LENGTH];
+    unsigned char digest[MD5_DIGEST_LENGTH+1] = {0};
 	string retHash;
-    // SHA1_Init(&mdContent);
-	SHA1((unsigned char*)chunk, strlen(chunk), (unsigned char*)&digest);
-	if(strlen((char *)digest) == 0){
-		cout<<"Unable to calculate hash"<<endl;
-		return "";
-	}
-   char mdString[SHA_DIGEST_LENGTH*2+1];
-	// cnt++;
-   for(int i = 0; i < SHA_DIGEST_LENGTH; i++){
-        sprintf(&mdString[i*2], "%02x", (unsigned int)digest[i]);
+    size_t length = strlen(chunk);
+    MD5((unsigned char *)chunk, length, (unsigned char *)&digest);
+    char mdString[(MD5_DIGEST_LENGTH*2)+1] = {0};
+    for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
+        sprintf((char *)&mdString[i*2], "%02x", (unsigned int)digest[i]);
 	}
 	retHash = mdString;
-	//cout<<"Hash for "<<cnt<<" is:"<<retHash<<endl;
+    memset(mdString, 0, sizeof(mdString));
+    memset(digest, 0, sizeof(digest));
 	return retHash;
 }
 
@@ -144,15 +125,7 @@ int prepareIndexOfBackupFile(string dataFilename, int chunkSize){
     int j=0;
     char ch;
     bool eof = false;
-    while(!eof){//fgets(chunk, chunkSize, dataFile)
-        // int i=0;
-        // while((ch=getc(dataFile)) != EOF){
-        //     chunk[i] = ch;
-        //     i++;
-        //     if(i == chunkSize){
-        //         break;
-        //     }
-        // }
+    while(!eof){
         int x = fread(chunk, 1, chunkSize, dataFile);
         if(x<=0){   //ch == EOF
             eof = true;
@@ -161,17 +134,9 @@ int prepareIndexOfBackupFile(string dataFilename, int chunkSize){
         cout<< j++ <<". Chunk in createIndexFile() is: "<<chunk<<endl;
         cv = calcRollingChecksum(chunk);
         strongChecksum = calcMD5(chunk);
-        if(strongChecksum == ""){
-            fclose(dataFile);
-            fclose(indexFile);
-            return -1;
-        }
         fprintf(indexFile, "%s:%s:%d\n",(char *)cv.checksum.c_str(), (char *)strongChecksum.c_str(), index);
         index++;
         memset(chunk, 0, chunkSize+1);
-        // if(ch == EOF){   //
-        //     eof = true;
-        // }
     }
     fclose(dataFile);
     fclose(indexFile);
@@ -230,14 +195,6 @@ int prepareUpdateIndexFile(string srcDataFile, string indexFile, int chunkSize){
     char ch;
     // cout<<i++<<". Chunk in prepareUpdateIndexFile() is: "<<chunk<<endl;
     while(!eof){
-        // int j=0;
-        // while((ch=getc(dPtr)) != EOF){
-        //     chunk[j] = ch;
-        //     j++;
-        //     if(j == chunkSize){
-        //         break;
-        //     }
-        // }
         int x = fread(chunk, 1, chunkSize, dPtr);
         if(x <= 0){
             eof = true;
@@ -248,10 +205,12 @@ int prepareUpdateIndexFile(string srcDataFile, string indexFile, int chunkSize){
         if(index != -1){
             cout<<"--------Checksum matched-----------"<<endl;
             string blockStr = "\n"+DELIM+to_string(index)+DELIM+"\n";
-            fputs((char *)blockStr.c_str(), uPtr);
+            // fputs((char *)blockStr.c_str(), uPtr);
+            fwrite((char *)blockStr.c_str(), 1, blockStr.length(), uPtr);
         }else{
             cout<<"--------Weak checksum did not matched-----------"<<endl;
-            fputc(chunk[0], uPtr);
+            // fputc(chunk[0], uPtr);
+            fwrite(&chunk[0], 1, 1, uPtr);
             fsetpos(dPtr, &position);
             fseek(dPtr, 1, SEEK_CUR);
             // cout<<ftell(dPtr)<<endl;
@@ -384,15 +343,15 @@ int updateDataBackupFile(string dataBackFile, string updateIndexFile, int chunkS
 
 int main(){
 
-    // prepareIndexOfBackupFile("Id.jpg", CHUNKSIZE);
-    // prepareUpdateIndexFile("updated.jpg", "Id.jpg.index", CHUNKSIZE);
+    // prepareIndexOfBackupFile("Linux_bak.pdf", CHUNKSIZE);
+    prepareUpdateIndexFile("Linux.pdf", "Linux_bak.pdf.index", CHUNKSIZE);
 
-    int x = updateDataBackupFile("Id.jpg", "updated.jpg.updateIndex", CHUNKSIZE);
-    if(x != 0){
-        cout<<"Error occured while updating the backup file.."<<endl;
-    }else{
-        cout<<"Backup file updated successfully.."<<endl;
-    }
+    // int x = updateDataBackupFile("Id.jpg", "updated.jpg.updateIndex", CHUNKSIZE);
+    // if(x != 0){
+    //     cout<<"Error occured while updating the backup file.."<<endl;
+    // }else{
+    //     cout<<"Backup file updated successfully.."<<endl;
+    // }
 
     return 0;
 }
