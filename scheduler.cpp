@@ -1,15 +1,29 @@
 #include "compareSnapshot.h"
+#include "createSnapshot.h"
+
 #define MDSchedulerLogFilePath "./LogFile/SchedulerLog.txt"
+
 using namespace std;
 
 class Scheduler{
 
 public: 
 
-void processSnapShot(string sourcePath,string destinationPath){
+void static processSnapShot(string sourcePath,string destinationPath){
 
 	
 	SyncData syncDataObj;
+	CreateSnapShotClass createSnapShotClassObj;
+
+	// char cwd[PATH_MAX];
+	// 	if (getcwd(cwd, sizeof(cwd)) != NULL) 
+	// 	{
+	// 		printf("Current working dir: %s\n", cwd);
+	// 	}
+	createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sourcePath),toCharArrayFromString(sourcePath));
+	// chdir(cwd);
+
+	
 	
 	vector<compareSnapshot> diffList = syncDataObj.compareSnapshotFile(sourcePath,destinationPath);
 	syncDataObj.runTasks(diffList);
@@ -169,8 +183,9 @@ int main(){
 		for(int i=0;i<snapShotToProcess.size();i++){
 
 			cout<<"Scheduler: "<<snapShotToProcess[i].sourcePath<<" "<<snapShotToProcess[i].destinationPath<<"\n";
-			//thread(schedulerObj.processSnapShot,snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath).detach();	
-
+							
+			thread t(schedulerObj.processSnapShot,snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath);	
+			t.detach();
 		}
 		
 		// unsigned int microseconds = 1200000;

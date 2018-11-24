@@ -100,17 +100,23 @@ void CreateSnapshotFile(char * source,char * destination ){
     //fp =fopen("snapshot1.txt","w");
     //if(!fp)
     //cout<<"casdsa ";
+     //to be discussed with chitta
+
+    /*
     int chdirval = chdir(inicwd);
     if(chdir(inicwd)){
-        perror("invalid path");
+        perror("invali$$$$$$$d path");
         return;
     }
-    //to be discussed with chitta
+    */
+    getcwd(inicwd,sizeof(inicwd));
+    int retval = chdir(destination);
     string str(destination);
     string path = str + "/.snapshot";
     // ofstream fout("snapshot1.txt");
     ofstream fout(path);
-    if (fout.is_open()){
+    if (fout.is_open())
+    {
         time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     fout<<source<<endl<<destination<<endl;
@@ -136,7 +142,15 @@ void CreateSnapshotFile(char * source,char * destination ){
     //fclose(fp);
     fout.close();
     }
+    else
+    {
+        cout << "File Not Found" << endl;
+    }
+    chdir(inicwd);
 }
+
+
+
 int main(){
     char source[256];
     char destination[256];

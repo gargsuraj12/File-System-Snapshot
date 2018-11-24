@@ -116,6 +116,8 @@ void CreateSnapshotFile(char * source,char * destination ){
         return;
     }
     */
+    getcwd(inicwd,sizeof(inicwd));
+    int retval = chdir(destination);
     string str(destination);
     string path = str + "/.snapshot";
     // ofstream fout("snapshot1.txt");
@@ -151,6 +153,7 @@ void CreateSnapshotFile(char * source,char * destination ){
     {
         cout << "File Not Found" << endl;
     }
+    chdir(inicwd);
 }
 
 };
