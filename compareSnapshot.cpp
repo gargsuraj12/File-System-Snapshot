@@ -13,6 +13,70 @@ public:
 	string SRCPATH = "";
 	string DESTPATH = "";
 
+	bool static isFile(struct compareSnapshot a,struct compareSnapshot b){
+
+		if(a.details.isFile==true&&b.details.isFile==false)
+			return false;
+
+		return true;
+	}
+
+	vector<struct compareSnapshot> sortList(vector<struct compareSnapshot> diffList){
+
+		sort(diffList.begin(),diffList.end(), isFile);
+
+		return diffList;
+	}	
+
+	vector<struct compareSnapshot> removeRedundantEntries(vector<struct compareSnapshot> diffList){
+
+		// cout<<"inside removeRedundantEntries\n";
+		// for(int i=0;i<diffList.size();i++){
+		// 	cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		// }
+
+
+		vector<int> toDelete;
+
+		for(int i=0;i<diffList.size();i++){
+
+			for(int j=0;j<diffList.size();j++){
+
+				if(diffList[j].details.isFile==false){
+
+					std::size_t found = diffList[i].details.fullQualifiedPath.find(diffList[j].details.fullQualifiedPath);
+					if (found!=std::string::npos&&diffList[i].details.fullQualifiedPath.length()!=diffList[j].details.fullQualifiedPath.length()){
+						// cout<<"Here\n";
+						toDelete.push_back(i);
+						break;
+					}
+
+				}
+
+			}
+		}
+
+		vector<struct compareSnapshot> modifiedDiffList;
+
+		for(int i=0;i<diffList.size();i++){
+
+			bool flag = false;
+
+			for(int j=0;j<toDelete.size();j++){
+				if(i==toDelete[j]){
+					flag = true;
+					break;
+				}
+			}
+
+			if(flag==false){
+				modifiedDiffList.push_back(diffList[i]);
+			}
+
+		}
+		
+		return modifiedDiffList;
+	}
 
 	vector<struct snapshotDetails> readSnapshot(string path){
 
@@ -122,6 +186,15 @@ public:
 
 		destinationDetails = readSnapshot(destinationPath);
 
+		for(int i=0;i<sourceDetails.size();i++){
+			cout<< sourceDetails[i].fullQualifiedPath<<"\n";
+		}
+
+		for(int i=0;i<destinationDetails.size();i++){
+			cout<< destinationDetails[i].fullQualifiedPath<<"\n";
+		}
+
+
 		// cout<<"prakash\n";
 
 		bool isPresent = false;
@@ -185,7 +258,15 @@ public:
 			isPresent = false;
 		}
 
-		//replaceSnapshotFile(sourcePath,destinationPath);
+		diffList = removeRedundantEntries(diffList);
+		diffList = sortList(diffList);
+		// replaceSnapshotFile(sourcePath,destinationPath);
+
+		// cout<<"inside comparesnapshotfile\n";
+		// for(int i=0;i<diffList.size();i++){
+		// cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		// }
+
 
 		return diffList;
 	}
@@ -282,7 +363,7 @@ int main(){
 	SyncData obj;
 	vector<compareSnapshot> diffList = obj.compareSnapshotFile("./repo/.snapshot","./repoSnapShot/.snapshot");
 
-	obj.runTasks(diffList);
+	// obj.runTasks(diffList);
 
 	for(int i=0;i<diffList.size();i++){
 		cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";

@@ -1,38 +1,123 @@
 #include "compareSnapshot.h"
-#include "createSnapshot.h"
+
 
 #define MDSchedulerLogFilePath "./LogFile/SchedulerLog.txt"
 
 using namespace std;
 
+
+static int counterForThread=0;
+
 class Scheduler{
 
 public: 
 
-void static processSnapShot(string sourcePath,string destinationPath){
+bool writeLog(string Data,int flag)
+{
+	bool success = false;
+	if(Data!="")
+	{
+		std::ofstream out;
+ 		out.open(MDSchedulerLogFilePath, std::ios::app);
+ 		string strDate(getCurrentTime());
+ 		if(flag == 1)
+ 		{
+ 			out << "Information : " ;
+ 		}
+ 		if(flag == -1)
+ 		{
+ 			out << "Error : " ;
+ 		}
+ 		out <<  strDate << ":" << Data << endl;
+		out.close();
+	}
+	return success;
+}
+
+void static performCURDOperation(vector<compareSnapshot> diffList,SyncData syncDataObj){
+
+	Scheduler schedulerobj;
+	// SyncData syncDataObj;
+
+	if(syncDataObj.SRCPATH==""){
+		schedulerobj.writeLog("syncData is Null ",-1);		
+	}else{
+		schedulerobj.writeLog("Thread Started Preperation CURD ",1);
+		schedulerobj.writeLog(to_string(++counterForThread),1);
+		
+		syncDataObj.runTasks(diffList);
+
+		schedulerobj.writeLog("Thread Stopped Preperation CURD Ended ",1);
+	}
+}
+
+
+vector<compareSnapshot> processSnapShot(string sourcePath,string destinationPath,SyncData &syncDataObj){
 
 	
-	SyncData syncDataObj;
-	CreateSnapShotClass createSnapShotClassObj;
+    Scheduler Schedulerobj;
+	// SyncData syncDataObj;
+	// CreateSnapShotClass createSnapShotClassObj;
 
-	// char cwd[PATH_MAX];
-	// 	if (getcwd(cwd, sizeof(cwd)) != NULL) 
-	// 	{
-	// 		printf("Current working dir: %s\n", cwd);
-	// 	}
-	createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sourcePath),toCharArrayFromString(sourcePath));
+	
+
+	char cwd[PATH_MAX];
+	if (getcwd(cwd, sizeof(cwd)) != NULL) 
+	{
+		printf("Current working dir: %s\n", cwd);
+	}
+
+    Schedulerobj.writeLog("MetaData Preperation",1);
+	syncDataObj.createSnapshotFunctionality(toCharArrayFromString(sourcePath),toCharArrayFromString(sourcePath));
+
 	// chdir(cwd);
 
-	
-	
-	vector<compareSnapshot> diffList = syncDataObj.compareSnapshotFile(sourcePath,destinationPath);
-	syncDataObj.runTasks(diffList);
+ //    Schedulerobj.writeLog("Creation OfSnapShot File",1);
+	// createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sourcePath),toCharArrayFromString(sourcePath));
 
+	chdir(cwd);
+
+    Schedulerobj.writeLog("Post Snapshot File Creation",1);
+	// chdir(cwd);
+
+	vector<compareSnapshot> diffList;
+
+	Schedulerobj.writeLog(sourcePath,1);
+	Schedulerobj.writeLog(destinationPath,1);
+
+	if(getcwd(cwd, sizeof(cwd)) != NULL) 
+	{
+		printf(" 8888888888888888 Current working dir: %s\n", cwd);
+	}
+
+	diffList = syncDataObj.compareSnapshotFile(sourcePath,destinationPath);
+	Schedulerobj.writeLog(" 8888888888888888 Current working dir ",1);
+	if(diffList.size()==0)
+	{
+		Schedulerobj.writeLog("No Difference Found Among BackUp and Original Path",1);
+	}
+	else
+	{
+		Schedulerobj.writeLog("Difference Found Among BackUp and Original Path",1);
+	}
+
+	for(int i=0;i<diffList.size();i++)
+	{
+		cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		string toWriteInFile = diffList[i].details.fullQualifiedPath + " Operation: " + diffList[i].operationType;
+		Schedulerobj.writeLog(toWriteInFile,1);
+	}
+    
+    Schedulerobj.writeLog("Has Created SnapShot Now Going for Comparing snapShot",1);
+	
+    return diffList;	
 }
 
 vector<struct SnapShotMetaDataInformation> CreateManifest()
 {
+		cout<<"Inside Manifest function\n";
 		vector<struct SnapShotMetaDataInformation> metadataContent = ProcessMetadataFileIntoCollection();
+				cout<<"Count : &&&&&&&777 : " <<  metadataContent.size()<< endl;
 		vector<struct SnapShotMetaDataInformation> metadataToProcessForScheduler;
 		if(metadataContent.size()>0)
 		{
@@ -67,6 +152,14 @@ vector<struct SnapShotMetaDataInformation> CreateManifest()
 				}
 			}
 		}
+
+		for(int i=0;i<metadataToProcessForScheduler.size();i++){
+
+			cout << metadataToProcessForScheduler[i].lastRunTime << " &&&&&&&&&&& ";
+
+		}
+
+		cout<<"Exiting Manifest function\n";
 		return metadataToProcessForScheduler;
 }
 
@@ -76,19 +169,7 @@ char * getCurrentTime()
     return std::asctime(std::localtime(&result));
 }
 
-bool writeLog(string Data)
-{
-	bool success = false;
-	if(Data!="")
-	{
-		std::ofstream out;
- 		out.open(MDSchedulerLogFilePath, std::ios::app);
- 		string strDate(getCurrentTime());
- 		out <<  strDate << ":" << Data << endl;
-		out.close();
-	}
-	return success;
-}
+
 
 
 bool endsWith(const std::string& s, const std::string& suffix)
@@ -134,23 +215,37 @@ std::vector<std::string> split(const std::string& s, const std::string& delimite
     return tokens;
 }
 
+void printcwd(){
+    char cwd[256];
+    getcwd(cwd,sizeof(cwd));
+    printf("%s\n",cwd);
+
+}
 
 vector<struct SnapShotMetaDataInformation> ProcessMetadataFileIntoCollection()
 {
 	std::string line;
 	std::ifstream file(MDPath);
 	vector<string> tokens;
+
 	bool firstLine=false;
 	vector<struct SnapShotMetaDataInformation> AllDataOfFile;
 	while (getline(file,line))
 	{
+		cout << " Line " << line << endl;
 		if(firstLine==false)
 		{
 			firstLine=true;
 			continue;
 		}
 
- 		tokens = split(line,"\t");	
+ 		tokens = split(line,"\t");
+
+ 		if(tokens.size()<4){
+ 			writeLog("Error : Metadata file is not in its specified format",-1);
+ 			return AllDataOfFile;
+ 		}
+
 		if(tokens.size()>0)
 		{
 			struct SnapShotMetaDataInformation information;
@@ -161,21 +256,30 @@ vector<struct SnapShotMetaDataInformation> ProcessMetadataFileIntoCollection()
 			AllDataOfFile.push_back(information);
 		}
 	}
+	file.close();
 	return AllDataOfFile;
 }
 };
 
 int main(){
 
-
+	vector<compareSnapshot> diffList;
 	Scheduler schedulerObj;
+
+	// CreateSnapShotClass createSnapShotClassObj;
+	
+	char cwd[PATH_MAX];
+	if (getcwd(cwd, sizeof(cwd)) != NULL) 
+	{
+		printf("Current working dir: %s\n", cwd);
+	}
+
+	int l=0;
+	// while(++l<3)
 	while(true)
 	{
-
-		//checking metadata file
-		//firing thread for expired timestamp
-		
-		schedulerObj.writeLog(" Scheduler Started ");
+		SyncData syncDataObj;
+		schedulerObj.writeLog(" Scheduler Started ",1);
 		vector<SnapShotMetaDataInformation> snapShotToProcess;
 
 		snapShotToProcess = schedulerObj.CreateManifest();
@@ -183,22 +287,38 @@ int main(){
 		for(int i=0;i<snapShotToProcess.size();i++){
 
 			cout<<"Scheduler: "<<snapShotToProcess[i].sourcePath<<" "<<snapShotToProcess[i].destinationPath<<"\n";
-							
-			thread t(schedulerObj.processSnapShot,snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath);	
-			t.detach();
+					
+			diffList = schedulerObj.processSnapShot(snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath,syncDataObj);
+			//schedulerObj.writeLog(" Post Process SnapShot ",1);
+
+			if(diffList.size()>0){
+
+				// schedulerObj.performCURDOperation(diffList);
+
+				thread t(schedulerObj.performCURDOperation,diffList,syncDataObj);	
+			 	t.join();
+
+			}else{
+				cout<<"no op\n";
+				chdir(cwd);
+				schedulerObj.writeLog("No operation to perform",1);		
+			}
+			 
 		}
 		
 		// unsigned int microseconds = 1200000;
-		schedulerObj.writeLog(" Scheduler About to Sleep ");
-
+		schedulerObj.writeLog(" Scheduler About to Sleep ",1);
+		cout<<"no op2\n";
 		sleep(timeInterval);
 
-		schedulerObj.writeLog(" Scheduler Awaked ");
+		schedulerObj.writeLog(" Scheduler Awaked ",1);
 	
-
+		diffList.clear();
+		chdir(cwd);
+			
 	}
 
-	schedulerObj.writeLog(" Scheduler Stopped ");
+	schedulerObj.writeLog(" Scheduler Stopped ",1);
 
 	return 0;
 }

@@ -2,9 +2,9 @@
 #include "HelperClass.h"
 #include "DeleteFile.h"
 #include "initialCopy.h"
+#include "createSnapshot.h"
 
 using namespace std;
-
 
 class SyncData{
 
@@ -13,6 +13,98 @@ public:
 	string SRCPATH = "";
 	string DESTPATH = "";
 
+	int createSnapshotFunctionality(string sourcePath,string destinationPath){
+
+		CreateSnapShotClass createSnapShotClassObj;
+		createSnapShotClassObj.prepareMetadataForSnapshot(toCharArrayFromString(sourcePath),toCharArrayFromString(destinationPath),1);
+		createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sourcePath),toCharArrayFromString(destinationPath));
+
+		return 0;
+	}
+
+	bool static isFile(const struct compareSnapshot a,const struct compareSnapshot b){
+
+		if(a.details.isFile==1&&b.details.isFile==0)
+			return false;
+
+		return true;
+	}
+
+	vector<struct compareSnapshot> sortList(vector<struct compareSnapshot> diffList){
+
+		cout << "Before Sorting " << endl;
+
+		for(int i=0;i<diffList.size();i++)
+		{
+			cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType << " " << diffList[i].details.isFile <<
+			diffList[i].details.ownership << "" << 
+			diffList[i].details.timeStamp << "" <<
+			diffList[i].details.accessRights << "" <<
+			diffList[i].newTimeStamp << " " << diffList[i].oldTimeStamp << " " << "\n";
+		}
+
+		cout << "Before Sorting End " << endl << endl;
+
+		sort(diffList.begin(),diffList.end(), isFile);
+		
+		cout << "After Sorting " << endl;
+		for(int i=0;i<diffList.size();i++)
+		{
+		cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		}
+		cout << "After Sorting End" << endl << endl;
+		return diffList;
+	}	
+
+	vector<struct compareSnapshot> removeRedundantEntries(vector<struct compareSnapshot> diffList){
+
+		// cout<<"inside removeRedundantEntries\n";
+		// for(int i=0;i<diffList.size();i++){
+		// 	cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		// }
+
+
+		vector<int> toDelete;
+
+		for(int i=0;i<diffList.size();i++){
+
+			for(int j=0;j<diffList.size();j++){
+
+				if(diffList[j].details.isFile==false){
+
+					std::size_t found = diffList[i].details.fullQualifiedPath.find(diffList[j].details.fullQualifiedPath);
+					if (found!=std::string::npos&&diffList[i].details.fullQualifiedPath.length()!=diffList[j].details.fullQualifiedPath.length()){
+						// cout<<"Here\n";
+						toDelete.push_back(i);
+						break;
+					}
+
+				}
+
+			}
+		}
+
+		vector<struct compareSnapshot> modifiedDiffList;
+
+		for(int i=0;i<diffList.size();i++){
+
+			bool flag = false;
+
+			for(int j=0;j<toDelete.size();j++){
+				if(i==toDelete[j]){
+					flag = true;
+					break;
+				}
+			}
+
+			if(flag==false){
+				modifiedDiffList.push_back(diffList[i]);
+			}
+
+		}
+		
+		return modifiedDiffList;
+	}
 
 	vector<struct snapshotDetails> readSnapshot(string path){
 
@@ -26,6 +118,8 @@ public:
 		
 		int lineNo = 1;
 
+		// cout<<"File path: "<<path;
+
 		if(snapshotFile.is_open()){
 
 			while(getline(snapshotFile,line)){
@@ -34,7 +128,7 @@ public:
 					
 					sPath = line;
 					SRCPATH = sPath;
-				
+					
 				}else if(lineNo == 2){
 
 					dPath = line;
@@ -47,7 +141,13 @@ public:
 					strcpy(fileLine, line.c_str());
 					
 					vector<string> tokens = split(fileLine,"\t");
-					
+					if(tokens.size()!=5){
+
+						cout<<"oooooooooooooooooooooooooooooooooooooooooooooooooo\n";
+						for(int i=0;i<tokens.size();i++)
+							cout<<tokens[i]<<"\n";
+						cout<<"oooooooooooooooooooooooooooooooooooooooooooooooooo\n";
+					}
 					// listItem.fullQualifiedPath = sPath +"/"+tokens[0];
 					if(tokens.size()>=5){
 						//Unix V.pdf	file	prakashjha	rw-rw-r--	Sun Sep  2 17:31:39 2018
@@ -111,6 +211,15 @@ public:
 
 	vector<struct compareSnapshot> compareSnapshotFile(string sourcePath,string destinationPath){
 
+		string sp = sourcePath;
+		string dp = destinationPath;
+
+		cout<<sourcePath<<"\n";
+		cout<<destinationPath<<"\n";
+
+		sourcePath += "/.snapshot";
+		destinationPath += "/.snapshot";
+
 		ifstream sourceSnapshot(sourcePath),destinationSnapshot(destinationPath);
 		
 		vector<struct snapshotDetails> sourceDetails, destinationDetails;
@@ -118,9 +227,24 @@ public:
 		vector<struct compareSnapshot> diffList;
 		struct compareSnapshot listItem;
 
+		// cout<<"File to be opened sourcepath\n";
+
 		sourceDetails = readSnapshot(sourcePath);
 
+		// cout<<"File to be opened destinationpath\n";
+
 		destinationDetails = readSnapshot(destinationPath);
+
+		// cout<<"File opened successfully\n";
+
+		// for(int i=0;i<sourceDetails.size();i++){
+		// 	cout<< sourceDetails[i].fullQualifiedPath<<"\n";
+		// }
+
+		// for(int i=0;i<destinationDetails.size();i++){
+		// 	cout<< destinationDetails[i].fullQualifiedPath<<"\n";
+		// }
+
 
 		// cout<<"prakash\n";
 
@@ -185,7 +309,19 @@ public:
 			isPresent = false;
 		}
 
-		//replaceSnapshotFile(sourcePath,destinationPath);
+		cout<<"Difflist size: "<<diffList.size()<<"\n";
+
+		// diffList = removeRedundantEntries(diffList);
+		// diffList = sortList(diffList);
+		// replaceSnapshotFile(sourcePath,destinationPath);
+
+		// cout<<"inside comparesnapshotfile\n";
+		// for(int i=0;i<diffList.size();i++){
+		// cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		// }
+		CreateSnapShotClass createSnapShotClassObj;
+		createSnapShotClassObj.prepareMetadataForSnapshot(toCharArrayFromString(sp),toCharArrayFromString(dp),1);
+		createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sp),toCharArrayFromString(dp));
 
 		return diffList;
 	}
@@ -196,9 +332,13 @@ public:
 
 		string dPath = "",sPath = "";
 
+
+
 		for(int i = 0;i<diffList.size();i++){
 
 			if(diffList[i].operationType == "create"){
+
+				// cout<<SRCPATH<<"\n";
 
 				sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
 				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
@@ -267,8 +407,10 @@ public:
 			
 				// cout<<"sPath in modify : "<<sPath<<"\n";
 				// cout<<"dPath in modify : "<<dPath<<"\n";
+				if(diffList[i].details.isFile==true){
 
-				copyFunctionalityObj.copy(toCharArrayFromString(sPath),toCharArrayFromString(dPath),1);							
+					copyFunctionalityObj.copy(toCharArrayFromString(sPath),toCharArrayFromString(dPath),1);
+				}							
 			}
 		}
 

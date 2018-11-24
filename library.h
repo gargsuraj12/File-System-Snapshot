@@ -10,12 +10,13 @@
 #include <unistd.h> //for getcwd()
 #include <dirent.h> // opendir() 
 #include <sys/stat.h> // for stat
-#include <thread>  
+#include <thread>
+#include <pthread.h>  
 #include <bits/stdc++.h>
 
 #define MDPath "./MetaDataFile/All_snapshot_details.txt"
 //#define timeInterval 1200000 //20 minutes
-#define timeInterval 5 //20 minutes
+#define timeInterval 15 //5sec
 
 using namespace std;
 
@@ -27,7 +28,7 @@ struct snapshotDetails{
 	string ownership;
 	string timeStamp;
 	string accessRights;
-	bool isFile;          // 1 -> file else directory
+	bool isFile=false;          // 1 -> file else directory
 };
 
 struct compareSnapshot{

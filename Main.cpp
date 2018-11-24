@@ -57,7 +57,6 @@ SnapShotMetaDataInformation setDetailsOfMetaData(string sourcePath,string destin
 	struct SnapShotMetaDataInformation information;
 	information.sourcePath=sourcePath;
 	information.destinationPath=destinationPath;
-	information.dateTimeStamp=getCurrentTime();
 	information.creationTimeStamp=getCurrentTimeZone();
 	information.lastRunTime=information.creationTimeStamp;
 	return information;
@@ -247,12 +246,11 @@ int main(int argc,char *argv[])
 		// Make an Entry in .snapshot__metadata_file
 		struct SnapShotMetaDataInformation information = setDetailsOfMetaData(argv[2],argv[3]);
 		
-		/* TODO : REMPVE THOS COMMENT NITISH 
 		if(checkExistenceOfSource(argv[2])==true)
 		{	
 			printf("Already snapshot of this directory is getting Created\n");
 			return 130;
-		}*/
+		}
 
 		//$$$$$$$
 
@@ -260,13 +258,14 @@ int main(int argc,char *argv[])
 		// Step 2 : Perform Createtion Of SnapShot File 
 		// Step 3 : Entry in snapshot_metadata file 
 
-		writeLog("Main : Creation of SnapShot File ");
-		performCreateSnapShotFileOperation(information.sourcePath,information.destinationPath);
-		writeLog("Main : Creation of SnapShot File : Complete ");
-
+		
 		writeLog("Main : Performing Copy Operation ");
 		performCopyOperation(information.sourcePath,information.destinationPath);
 		writeLog("Main : Performing Copy Operation : Complete ");
+
+		writeLog("Main : Creation of SnapShot File ");
+		performCreateSnapShotFileOperation(information.sourcePath,information.destinationPath);
+		writeLog("Main : Creation of SnapShot File : Complete ");
 
 		writeLog("Main : Performing Entry in SnapShot Metadata File");
 		string data = PrepareData(information);
