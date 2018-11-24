@@ -13,7 +13,7 @@
 using namespace std;
 
 #define MODVAL 1048576
-static const int CHUNKSIZE  = 3412;
+static const int CHUNKSIZE  = 40;
 static const string DELIM = "$";
 // static const string END_DELIM = "$|";
 
@@ -41,12 +41,8 @@ vector<string> splitLine(string line, string delimiter){
 
 //check the current line contains a valid index
 int checkValidIndex(string line, string delimeter){
-    // cout<<"Delimeter is: "<<delimeter<<endl;
     vector<string> vec = splitLine(line, delimeter);
     // cout<<"vector size after splitting is: "<<vec.size()<<endl;
-    for(auto it : vec){
-        cout<<it<<endl;
-    }
     if(vec.size() != 3){
         return -1;
     }
@@ -164,6 +160,7 @@ int checksumMatch(string indexFile, string chunk){
             if(strongChecksum == vec[1]){
                 indexStr = vec[2].substr(0, vec[2].length()-1);
                 index = stoi((char *)indexStr.c_str());
+                fclose(iPtr);
                 return index;
             }
         }
@@ -210,7 +207,13 @@ int prepareUpdateIndexFile(string srcDataFile, string indexFile, int chunkSize){
         }else{
             cout<<"--------Weak checksum did not matched-----------"<<endl;
             // fputc(chunk[0], uPtr);
-            fwrite(&chunk[0], 1, 1, uPtr);
+            if(chunk[0] == '\n'){
+                string str = "####";
+                fwrite((char *)str.c_str(), 1, 4, uPtr);
+            }else{
+                fwrite(&chunk[0], 1, 1, uPtr);
+            }
+            // fwrite(&chunk[0], 1, 1, uPtr);
             fsetpos(dPtr, &position);
             fseek(dPtr, 1, SEEK_CUR);
             // cout<<ftell(dPtr)<<endl;
@@ -220,55 +223,6 @@ int prepareUpdateIndexFile(string srcDataFile, string indexFile, int chunkSize){
         // if(ch == EOF){
         //     eof = true;
         // }
-    }
-    fclose(dPtr);
-    fclose(uPtr);
-    cout<<"Update file created successfully.."<<endl;
-    return 0;
-}
-
-int prepareUpdateIndexFile_Backup(string srcDataFile, string indexFile, int chunkSize){
-    FILE *dPtr, *uPtr;
-    dPtr = fopen((char *)srcDataFile.c_str(), "rb");
-    if(dPtr == NULL){
-        cout<<"Unable to open data file.."<<endl;
-        return -1;
-    }
-    string updateFile = srcDataFile+".updateIndex";
-    uPtr = fopen((char *)updateFile.c_str(), "wb");
-    if(uPtr == NULL){
-        cout<<"Unable to create update file.."<<endl;
-        return -1;
-    }
-    char chunk[chunkSize+1] = {0};
-    string weakChecksum, strongChecksum;
-    int index;
-    fpos_t position;
-    fsetpos(dPtr, &position);
-    char *status = fgets(chunk, chunkSize, dPtr);
-    cout<<"Staus is: "<<status<<endl;
-    int i=0;
-    bool eof = false;
-    // cout<<i++<<". Chunk in prepareUpdateIndexFile() is: "<<chunk<<endl;
-    while(strlen(chunk) != 0){
-        cout<<i++<<". Chunk in prepareUpdateIndexFile() is: "<<chunk<<endl;
-        index = checksumMatch(indexFile, chunk);
-        if(index != -1){
-            cout<<"--------Checksum matched-----------"<<endl;
-            string blockStr = "\n"+DELIM+to_string(index)+DELIM+"\n";
-            fputs((char *)blockStr.c_str(), uPtr);
-        }else{
-            cout<<"--------Weak checksum did not matched-----------"<<endl;
-            fputc(chunk[0], uPtr);
-            fsetpos(dPtr, &position);
-            fseek(dPtr, 1, SEEK_CUR);
-            // cout<<ftell(dPtr)<<endl;
-        }
-        memset(chunk, 0, chunkSize+1);
-        fgetpos(dPtr, &position);
-        if(!eof && !fgets(chunk, chunkSize, dPtr)){
-            eof = true;
-        }
     }
     fclose(dPtr);
     fclose(uPtr);
@@ -308,7 +262,23 @@ int updateDataBackupFile(string dataBackFile, string updateIndexFile, int chunkS
         if(index == -1){
             cout<<"Invalid index so writing current line.."<<endl;
             // fputs(line, newPtr);
-            fwrite(line, 1, strlen(line), newPtr);
+            // string temp = line;
+            // temp = temp.substr(0, temp.length()-1);
+            // fwrite((char *)temp.c_str(), 1, temp.length(), newPtr);
+            // fwrite(line, 1, strlen(line), newPtr);
+            for(int i=0; i<strlen(line)-1; i++){
+                if(line[i] != '#'){
+                    fwrite(&line[i], 1, 1, newPtr);
+                }else if(line[i] == '#'){
+                    if(i+3 < strlen(line) && line[i+1] == '#' && line[i+2] == '#' && line[i+3] == '#'){
+                        string str = "\n";
+                        fwrite((char *)str.c_str(), 1, 1, newPtr);
+                        i += 3;
+                    }else{
+                        fwrite(&line[i], 1, 1, newPtr);
+                    }
+                }
+            }
         }else{
             cout<<"Valid index thus writing indexed block in backup file and index is: "<<index<<endl;
             fseek(dbPtr, index*chunkSize, SEEK_SET);
@@ -320,38 +290,42 @@ int updateDataBackupFile(string dataBackFile, string updateIndexFile, int chunkS
             fwrite(chunk, 1, x, newPtr);
             memset(chunk, 0, chunkSize+1);
         }
+        line = NULL;
     }
     fclose(dbPtr);
     fclose(uiPtr);
     fclose(newPtr);
 
-    int x = remove((char *)dataBackFile.c_str());
-    if (x != 0){
-        cout<<"Unable to delete old backup file.."<<endl;
-        return -1;
-    }
-    cout<<"Old backup file deleted successfully.."<<endl;
-    x = rename((char *)newdataFile.c_str(), (char *)dataBackFile.c_str());
-    if(x != 0){
-        cout<<"Unable to rename newly created file as old backup file.."<<endl;
-        return -1;
-    }
-    cout<<"New file is renamed as old backup file successfully.."<<endl;
+    // int x = remove((char *)dataBackFile.c_str());
+    // if (x != 0){
+    //     cout<<"Unable to delete old backup file.."<<endl;
+    //     return -1;
+    // }
+    // cout<<"Old backup file deleted successfully.."<<endl;
+    // x = rename((char *)newdataFile.c_str(), (char *)dataBackFile.c_str());
+    // if(x != 0){
+    //     cout<<"Unable to rename newly created file as old backup file.."<<endl;
+    //     return -1;
+    // }
+    // cout<<"New file is renamed as old backup file successfully.."<<endl;
     return 0;
 }
 
 
 int main(){
-
-    // prepareIndexOfBackupFile("Linux_bak.pdf", CHUNKSIZE);
-    prepareUpdateIndexFile("Linux.pdf", "Linux_bak.pdf.index", CHUNKSIZE);
-
-    // int x = updateDataBackupFile("Id.jpg", "updated.jpg.updateIndex", CHUNKSIZE);
-    // if(x != 0){
-    //     cout<<"Error occured while updating the backup file.."<<endl;
-    // }else{
-    //     cout<<"Backup file updated successfully.."<<endl;
-    // }
+    int ch;
+    cin>>ch;
+    if(!ch){
+        prepareIndexOfBackupFile("bak.txt", CHUNKSIZE);
+        return 0;
+    }
+    prepareUpdateIndexFile("df.txt", "bak.txt.index", CHUNKSIZE);
+    int x = updateDataBackupFile("bak.txt", "df.txt.updateIndex", CHUNKSIZE);
+    if(x != 0){
+        cout<<"Error occured while updating the backup file.."<<endl;
+    }else{
+        cout<<"Backup file updated successfully.."<<endl;
+    }
 
     return 0;
 }
