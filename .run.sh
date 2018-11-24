@@ -18,27 +18,27 @@ function checkC() {
 		
 }
 
-function runOnStart(){
-	echo "runOnStart"
+function startScheduler(){
+	echo "startScheduler"
 	isError=`echo 0`
 #bash /home/prakashjha/os/workarea/OS_Snapshot/.run.sh
 	if [ "$isError" == "0" ]
 	then
-		RUNCOMMAND=`cd /home/prakashjha/os/workarea/OS_Snapshot` 
-		
 		EXEC=`echo scheduler`
-		SRC=`echo scheduler.cpp`
-		if [ "$SRC" -nt "$EXEC" ]
-		then
-			echo "Rebuliding Class File Again"
+		SRC=`echo scheduler.cpp -pthread -lcrypto`
+		#if [ "$SRC" -nt "$EXEC" ]
+		#then
+			echo "Rebuliding Scheduler Class File"
 			$CC -o $EXEC $SRC
-		fi
+		#fi
 		RESULT=`./$EXEC`
+		#do process in background 
+		#RESULT=`./$EXEC & disown`
 	fi			
 }
 
 function createSnapShot() {  
-	echo "XXXXcreateSnapShot"
+	echo "createSnapShot"
 	isError=`echo 0`
 
 	if [ "$#" -lt "2" ]
@@ -55,7 +55,7 @@ function createSnapShot() {
 		echo "$SRC"
 		#if [ "$SRC" -nt "$EXEC" ]
 		#then
-			echo "XXXX Rebuliding Class File Again"
+			echo "Rebuliding Class File"
 			$CC -o $EXEC $SRC 
 		#fi
 		RESULT=`./$EXEC createSnapShot $1 $2`
@@ -88,7 +88,7 @@ function restoreSnapShot() {
 		SRC=`echo Main.cpp`
 		if [ "$SRC" -nt "$EXEC" ]
 		then
-			echo "Rebuliding Class File Again"
+			echo "Rebuliding Class File"
 			$CC -o $EXEC $SRC
 		fi
 		RESULT=`./$EXEC restoreSnapShot $1`
