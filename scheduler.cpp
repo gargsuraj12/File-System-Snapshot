@@ -389,10 +389,10 @@ int main(){
 			 
 		}
 		
-		schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
+		/*schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
 		bool success = schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
 		schedulerObj.writeLog("Updated the time Stamp of Meta Data File",1);
-		
+		*/
 		// unsigned int microseconds = 1200000;
 		schedulerObj.writeLog(" Scheduler About to Sleep ",1);
 		cout<<"no op2\n";

@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <vector>
 #include <unistd.h>
+#include <sys/stat.h> // for stat
+#include <cmath>
 
 using namespace std;
 
@@ -22,14 +24,25 @@ struct checksumValues{
     string checksum;
 };
 
-
+int getChunkSizeOfFile(string filePath){
+	struct stat infofile;
+        // strcpy(temppath,source);
+    int status = stat((char *)filePath.c_str(),&infofile);
+    if(status != 0){
+    	cout<<"Unable to get file stat for"<<filePath<<endl;
+    	return -1;
+    }else{
+    	cout<<"file Size is: "<<infofile.st_size<<endl;
+    }
+    return ceil(sqrt(infofile.st_size));
+}
 
 class Rsync{
 
-public:
+    public:
 
     //Calculates MD5 hash for the given data chunk
-        vector<string> splitLine(string line, string delimiter){
+    vector<string> splitLine(string line, string delimiter){
         vector<string> splitV;
         string token;
         int index = line.find(delimiter);
@@ -108,17 +121,17 @@ public:
         return cv;
     }
 
-    int prepareIndexOfBackupFile(string dataFilename, int chunkSize){
+    string prepareIndexOfBackupFile(string dataFilename, int chunkSize){
         FILE *dataFile = fopen((char *)dataFilename.c_str(), "rb");
         if(dataFile == NULL){
             cout<<"Unable to open file "<<dataFilename<<endl;
-            return -1;
+            return "";
         }
         string indexFilename = dataFilename+".index";
         FILE *indexFile = fopen((char *) indexFilename.c_str(), "wb");
         if(indexFile == NULL){
             cout<<"Unable to create index file for data file: "<<dataFilename<<endl;
-            return -1;
+            return "";
         }
         int index = 0;
         char chunk[chunkSize+1]= {0};
@@ -142,7 +155,7 @@ public:
         }
         fclose(dataFile);
         fclose(indexFile);
-        return 0;
+        return indexFilename;
     }
 
     int checksumMatch(string indexFile, string chunk){
@@ -175,18 +188,18 @@ public:
         return -1;
     }
 
-    int prepareUpdateIndexFile(string srcDataFile, string indexFile, int chunkSize){
+    string prepareUpdateIndexFile(string srcDataFile, string indexFile, int chunkSize){
         FILE *dPtr, *uPtr;
         dPtr = fopen((char *)srcDataFile.c_str(), "rb");
         if(dPtr == NULL){
             cout<<"Unable to open data file.."<<endl;
-            return -1;
+            return "";
         }
         string updateFile = srcDataFile+".updateIndex";
         uPtr = fopen((char *)updateFile.c_str(), "wb");
         if(uPtr == NULL){
             cout<<"Unable to create update file.."<<endl;
-            return -1;
+            return "";
         }
         char chunk[chunkSize+1] = {0};
         string weakChecksum, strongChecksum;
@@ -233,7 +246,7 @@ public:
         fclose(dPtr);
         fclose(uPtr);
         cout<<"Update file created successfully.."<<endl;
-        return 0;
+        return updateFile;
     }
 
     int updateDataBackupFile(string dataBackFile, string updateIndexFile, int chunkSize){
@@ -302,18 +315,18 @@ public:
         fclose(uiPtr);
         fclose(newPtr);
 
-        // int x = remove((char *)dataBackFile.c_str());
-        // if (x != 0){
-        //     cout<<"Unable to delete old backup file.."<<endl;
-        //     return -1;
-        // }
-        // cout<<"Old backup file deleted successfully.."<<endl;
-        // x = rename((char *)newdataFile.c_str(), (char *)dataBackFile.c_str());
-        // if(x != 0){
-        //     cout<<"Unable to rename newly created file as old backup file.."<<endl;
-        //     return -1;
-        // }
-        // cout<<"New file is renamed as old backup file successfully.."<<endl;
+        int x = remove((char *)dataBackFile.c_str());
+        if (x != 0){
+            cout<<"Unable to delete old backup file.."<<endl;
+            return -1;
+        }
+        cout<<"Old backup file deleted successfully.."<<endl;
+        x = rename((char *)newdataFile.c_str(), (char *)dataBackFile.c_str());
+        if(x != 0){
+            cout<<"Unable to rename newly created file as old backup file.."<<endl;
+            return -1;
+        }
+        cout<<"New file is renamed as old backup file successfully.."<<endl;
         return 0;
     }
 
@@ -321,17 +334,21 @@ public:
 
 int main(){
     int ch;
-    cin>>ch;
+    // cin>>ch;
     Rsync rObj;
-    int chunkSize = 40;
+    
     string srcFilePath = "/home/prakashjha/os/workarea/OS_Snapshot/df.txt";
     string backupFilePath = "/home/prakashjha/os/workarea/OS_Snapshot/bak.txt";
+    int chunkSize = getChunkSizeOfFile(backupFilePath);
+    string indexFilePath;
+    string updateIndexFilePath;
     if(!ch){
-        rObj.prepareIndexOfBackupFile(backupFilePath, chunkSize);
+        indexFilePath = rObj.prepareIndexOfBackupFile(backupFilePath, chunkSize);
         return 0;
     }
-    rObj.prepareUpdateIndexFile(srcFilePath, "bak.txt.index", chunkSize);
-    int x = rObj.updateDataBackupFile(backupFilePath, "df.txt.updateIndex", chunkSize);
+    // indexFilePath =  rObj.prepareIndexOfBackupFile(backupFilePath, chunkSize);
+    rObj.prepareUpdateIndexFile(srcFilePath, backupFilePath+".index", chunkSize);
+    int x = rObj.updateDataBackupFile(backupFilePath, srcFilePath+".updateIndex", chunkSize);
     if(x != 0){
         cout<<"Error occured while updating the backup file.."<<endl;
     }else{
