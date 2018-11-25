@@ -15,9 +15,6 @@ op : List of Details of Folder and Files
 Get Metdata About Directory(Path)
 	recursively 
 
-permission handling needs to be done
-if file/folder exits then copy file/folder handling
-
 -------------------
 Nitish : 
 
@@ -44,9 +41,6 @@ restoreSnapShot SourcePath : not yet
 
 stopSnashot sourcePath : working
 
-metadata file entry --> newline error
-update snapshot metadata
-update bash file for restoreSnapShot
 
 -------------------
 Jha : 
@@ -64,8 +58,6 @@ PerformOperation()
 }
 
 to remove redundant file copy and delete operations from list
-
-restoreSnapshotClass to be invoked from bash
 
 -------------------
 Suraj :  

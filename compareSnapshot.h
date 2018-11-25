@@ -5,6 +5,7 @@
 #include "createSnapshot.h"
 #include "rsync.h"
 
+#define MDLogFilePath "./LogFile/logfile.txt"
 
 using namespace std;
 
@@ -12,8 +13,42 @@ class SyncData{
 
 public:
 
+	int toLog = 1;
+
 	string SRCPATH = "";
 	string DESTPATH = "";
+
+	char * getCurrentTime()
+	{
+	    std::time_t result = std::time(nullptr);
+	    return std::asctime(std::localtime(&result));
+	}
+
+	bool writeLog(string Data,int flag)
+	{
+		if(toLog==0)
+			return false;
+
+		bool success = false;
+		if(Data!="")
+		{
+			std::ofstream out;
+	 		out.open(MDLogFilePath, std::ios::app);
+	 		string strDate(getCurrentTime());
+	 		if(flag == 1)
+	 		{
+	 			out << "Information : " ;
+	 		}
+	 		if(flag == -1)
+	 		{
+	 			out << "Error : " ;
+	 		}
+	 		out <<  strDate << ":" << Data << endl;
+			out.close();
+		}
+		return success;
+	}
+
 
 	int getChunkSizeOfFile(string filePath){
 		struct stat infofile;
@@ -123,6 +158,10 @@ public:
 
 	vector<struct snapshotDetails> readSnapshot(string path){
 
+		writeLog("Entering into readSnapshot",1);
+		writeLog(path,1);
+		// writeLog(destinationPath,1);
+
 		ifstream snapshotFile(path);
 
 		vector<struct snapshotDetails> detailsList;
@@ -226,6 +265,10 @@ public:
 
 	vector<struct compareSnapshot> compareSnapshotFile(string sourcePath,string destinationPath){
 
+		writeLog("Entering into compareSnapshot",1);
+		writeLog(sourcePath,1);
+		writeLog(destinationPath,1);
+
 		string sp = sourcePath;
 		string dp = destinationPath;
 
@@ -242,23 +285,23 @@ public:
 		vector<struct compareSnapshot> diffList;
 		struct compareSnapshot listItem;
 
-		// cout<<"File to be opened sourcepath\n";
+		cout<<"File to be opened sourcepath\n";
 
 		sourceDetails = readSnapshot(sourcePath);
 
-		// cout<<"File to be opened destinationpath\n";
+		cout<<"File to be opened destinationpath\n";
 
 		destinationDetails = readSnapshot(destinationPath);
 
-		// cout<<"File opened successfully\n";
+		cout<<"File opened successfully\n";
 
-		// for(int i=0;i<sourceDetails.size();i++){
-		// 	cout<< sourceDetails[i].fullQualifiedPath<<"\n";
-		// }
+		for(int i=0;i<sourceDetails.size();i++){
+			cout<< sourceDetails[i].fullQualifiedPath<<"\n";
+		}
 
-		// for(int i=0;i<destinationDetails.size();i++){
-		// 	cout<< destinationDetails[i].fullQualifiedPath<<"\n";
-		// }
+		for(int i=0;i<destinationDetails.size();i++){
+			cout<< destinationDetails[i].fullQualifiedPath<<"\n";
+		}
 
 
 		// cout<<"prakash\n";
@@ -330,13 +373,20 @@ public:
 		// diffList = sortList(diffList);
 		// replaceSnapshotFile(sourcePath,destinationPath);
 
-		// cout<<"inside comparesnapshotfile\n";
-		// for(int i=0;i<diffList.size();i++){
-		// cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
-		// }
+		cout<<"inside comparesnapshotfile\n";
+		
+		for(int i=0;i<diffList.size();i++){
+			cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		}
+
 		CreateSnapShotClass createSnapShotClassObj;
 		createSnapShotClassObj.prepareMetadataForSnapshot(toCharArrayFromString(sp),toCharArrayFromString(dp),1);
 		createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sp),toCharArrayFromString(dp));
+
+		// int status = remove(toCharArrayFromString(sourcePath));
+		// if(status == -1){
+		// 	cout<<"Error while deleting .snapshot file in source "<<sourcePath<<"\n";
+		// }
 
 		return diffList;
 	}
@@ -347,7 +397,9 @@ public:
 
 		string dPath = "",sPath = "";
 
-
+		writeLog("Entering into runTasks",1);
+		writeLog(SRCPATH,1);
+		writeLog(DESTPATH,1);
 
 		for(int i = 0;i<diffList.size();i++){
 
@@ -378,14 +430,21 @@ public:
 				// }
 				// string folder = "";
 				// folder = sPath.substr(lastindex+1,sPath.length());
-				if(diffList[i].details.isFile==false){
+				if(diffList[i].details.isFile==false)
+				{
 					if (mkdir(toCharArrayFromString(dPath),0777) == -1)
                         perror("cant do mkdir in compareSnapshot");	
 				}else{
 					dPath = SplitFilename(dPath);
 				}
 				
-				copyFunctionalityObj.copy(toCharArrayFromString(sPath),toCharArrayFromString(dPath),1);							
+						perror("++++++++Creating File/Folder ");
+						perror("for source path: ");
+						perror(toCharArrayFromString(sPath));
+						//writeLog("Creating File/Folder for Destination Path : ",1);
+						writeLog("for destination path: ",1);
+						writeLog(dPath,1);
+						copyFunctionalityObj.copy(toCharArrayFromString(sPath),toCharArrayFromString(dPath),1);							
 
 
 
@@ -402,6 +461,10 @@ public:
 				
 				// printf("Path: %s\n", path);
 
+				writeLog("--------Deleting File/Folder for path : ",1);
+				//writeLog(sPath,1);
+				//writeLog("Creating File/Folder for Destination Path : ",1);
+				writeLog(dPath,1);
 				deleteFunctionalityObj.removedirectory(toCharArrayFromString(dPath));
 
 			}else if(diffList[i].operationType == "modify"){

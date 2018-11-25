@@ -6,6 +6,8 @@ class CreateSnapShotClass
     
 public : 
 
+bool flag=false;
+
 char temp[512];
 vector<string> entries;
 vector<string> owner;
@@ -92,7 +94,7 @@ void prepareMetadataForSnapshot(char * source , char * destination,int isFirst){
     }
 }
 
-void CreateSnapshotFile(char * source,char * destination ){
+void CreateSnapshotFile(char * source,char * destination){
     //FILE *fp;
     //fp =fopen("snapshot1.txt","w");
     //if(!fp)
@@ -132,7 +134,12 @@ void CreateSnapshotFile(char * source,char * destination ){
     //fprintf(fp,"snapshot created: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     for(int i=0;i<entries.size();i++){
         //fprintf (fp , "%s\t%s\t%s\t%s" , entries[i],owner[i],accessrights[i],accesstime[i]);
-        fout<<entries[i]<<"\t"<<isfile[i]<<"\t"<<owner[i]<<"\t"<<accessrights[i]<<"\t"<<accesstime[i];
+        // if flag is true then it will check for accessright permission
+        //if flag is false it will add irrespective of permission
+        if(flag && accessrights[i][2]=='x')
+            fout<<entries[i]<<"\t"<<isfile[i]<<"\t"<<owner[i]<<"\t"<<accessrights[i]<<"\t"<<accesstime[i];
+        else if(!flag)
+            fout<<entries[i]<<"\t"<<isfile[i]<<"\t"<<owner[i]<<"\t"<<accessrights[i]<<"\t"<<accesstime[i];
     }
     //cout<<"casdsa asdasd";
         //cout<<entries[i]<<" "<<owner[i]<<" "<<accessrights[i]<<" "<<accesstime[i]<<endl;

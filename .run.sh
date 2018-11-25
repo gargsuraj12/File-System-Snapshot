@@ -74,7 +74,7 @@ function createSnapShot() {
 function restoreSnapShot() {  
 	echo "restoreSnapShot"	
 	isError=`echo 0`
-
+	echo "restoreSnapShot"	
 	if [ "$#" -lt "1" ]
 	then
 		echo "Improper Command. Please verify input Parameters"
@@ -85,7 +85,7 @@ function restoreSnapShot() {
 	if [ "$isError" == "0" ]
 	then
 		EXEC=`echo restoreSnapShot`
-		SRC=`echo restoreSnapShot.cpp -lcrypto -pthread`
+		SRC=`echo restoreSnapShot.cpp -lcrypto`
 		#if [ "$SRC" -nt "$EXEC" ]
 		#then
 			echo "Rebuliding Restore Snapshot file Class File Need to Comment Out"
