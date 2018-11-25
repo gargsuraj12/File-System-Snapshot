@@ -258,7 +258,86 @@ vector<struct SnapShotMetaDataInformation> ProcessMetadataFileIntoCollection()
 	file.close();
 	return AllDataOfFile;
 }
+
+bool updateLastUpdatedTimeForSnapShot(map<string,string> DataWithValue)
+{
+	string deleteline;
+	std::string line;
+
+	std::ifstream file(MDPath);
+	ofstream temp;
+	temp.open("temp.txt");
+	vector<string> tokens;
+	bool firstLine=false;
+
+	while (getline(file,line))
+	{
+		if(firstLine==false)
+		{
+			firstLine=true;
+			temp << line <<endl;
+			continue;
+		}
+
+ 		tokens = split(line,"\t");		
+		if(tokens.size()>0 && DataWithValue.find(tokens[0])!=DataWithValue.end())
+		{
+			struct SnapShotMetaDataInformation information;
+			information.sourcePath=tokens[0];
+			information.destinationPath=tokens[1];
+			information.creationTimeStamp=tokens[2];
+			information.lastRunTime=DataWithValue[tokens[0]];
+			string strDataToWrite = PrepareData(information);
+			temp << strDataToWrite ;
+		}
+		else
+		{
+			temp << line <<endl;
+		}
+	}
+
+	temp.close();
+	remove(MDPath);
+	rename("temp.txt",MDPath);
+	return true;
+}
+
+string PrepareData(struct SnapShotMetaDataInformation info)
+{
+	string strData;
+	//if(info)
+	{
+		strData.append(info.sourcePath);
+		strData.append("\t");
+		strData.append(info.destinationPath);
+		strData.append("\t");
+		strData.append(info.creationTimeStamp);
+		strData.append("\t");
+		strData.append(info.lastRunTime);
+		strData.erase( std::remove(strData.begin(), strData.end(), '\r'), strData.end() );
+		strData.erase( std::remove(strData.begin(), strData.end(), '\n'), strData.end() );
+		strData.append("\n");
+	}
+	return strData;
+}
+
 };
+
+string getCurrentTimeZone()
+{
+    std::time_t rawtime;
+    std::tm* timeinfo;
+    char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
+
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+
+    std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
+    std::puts(buffer);
+	string finalresult(buffer);
+	delete buffer;
+	return finalresult;
+}
 
 int main(){
 
@@ -280,13 +359,18 @@ int main(){
 		SyncData syncDataObj;
 		schedulerObj.writeLog(" Scheduler Started ",1);
 		vector<SnapShotMetaDataInformation> snapShotToProcess;
-
 		snapShotToProcess = schedulerObj.CreateManifest();
+
+		
+		//Create Map For Processing
+		map<string,string> AllDetailsForTimeUpdate;
 
 		for(int i=0;i<snapShotToProcess.size();i++){
 
 			cout<<"Scheduler: "<<snapShotToProcess[i].sourcePath<<" "<<snapShotToProcess[i].destinationPath<<"\n";
-					
+
+			AllDetailsForTimeUpdate[snapShotToProcess[i].sourcePath]=getCurrentTimeZone();
+	
 			diffList = schedulerObj.processSnapShot(snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath,syncDataObj);
 			//schedulerObj.writeLog(" Post Process SnapShot ",1);
 
@@ -304,6 +388,10 @@ int main(){
 			}
 			 
 		}
+		
+		schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
+		bool success = schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+		schedulerObj.writeLog("Updated the time Stamp of Meta Data File",1);
 		
 		// unsigned int microseconds = 1200000;
 		schedulerObj.writeLog(" Scheduler About to Sleep ",1);
