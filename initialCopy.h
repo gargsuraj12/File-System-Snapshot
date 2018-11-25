@@ -275,8 +275,12 @@ class CopyFunctionality
                     // strcat(source,temp);
                     // printf("new is source %s\n",source);
                     cout<<"path for destination directory is "<<dpath<<endl;
-                    if (mkdir(dpath,0777) == -1)
-                        perror("cant do mkdir");
+                    if (mkdir(dpath,0777) == -1){
+                        char errmsg[256];
+                        strcpy(errmsg,"cant do mkdir for ");
+                        strcat(errmsg,dpath);
+                        perror(errmsg);
+                    }
                     cout<<"path for directory is "<<path<<endl;
                     copy(path , dpath , 0);
                     //printf("is_dir directory is %s\n",e->d_name);
