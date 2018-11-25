@@ -22,10 +22,10 @@ struct checksumValues{
 
 class Rsync{
 
-public:
+    public:
 
     //Calculates MD5 hash for the given data chunk
-        vector<string> splitLine(string line, string delimiter){
+    vector<string> splitLine(string line, string delimiter){
         vector<string> splitV;
         string token;
         int index = line.find(delimiter);

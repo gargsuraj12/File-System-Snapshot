@@ -36,7 +36,7 @@ class CopyFunctionality
         {
             ///home/prakashjha/os/workarea/OS_Snapshot/LogFile
             std::ofstream out;
-            out.open("/home/prakashjha/os/workarea/OS_Snapshot/LogFile/logfile.txt", std::ios::app);
+            out.open(MDPathLogFile, std::ios::app);
             out << getCurrentTime() << ":" << Data << endl;
             out.close();
         }
@@ -163,14 +163,12 @@ class CopyFunctionality
         ////printf("file clsoed");
     }
     void copy(char * source , char * destination,int isFirst){
-         writeLog("Start Of copy: &&&&&&&&&&&&&&&&&&7");
-
-        if (getcwd(masterCopyLocation, sizeof(masterCopyLocation)) != NULL) 
-        {
+        writeLog("Start Of copy for source: "+(string)source +" and destination: "+(string)destination);
+        cout<<"---Inside copy() function---"<<endl;
+        if(getcwd(masterCopyLocation, sizeof(masterCopyLocation)) != NULL) {
             writeLog("Location Of File");
             writeLog(masterCopyLocation);
         }
-
 
         if(isFirst){
             strcpy(temp,"");
@@ -216,6 +214,7 @@ class CopyFunctionality
                     strcat(sd,"/");
                     strcat(sd,filen);
                     cout<<"filen is "<<filen<<" and is loc is "<<sd<<endl;
+                    cout<<"Source is: "<<source<<endl;
                     cp(sd,source);
                    
                    // writeLog("Chunk size of file is: "+chunkSize);
@@ -239,6 +238,8 @@ class CopyFunctionality
                     //copy_file(sd,destination,filen);
                     cout<<"path for file is "<<temppath<<endl;
                     //printf("is_reg file is %s\n",e->d_name);
+
+                    writeLog("File copied successfully at "+(string)sd);
                 }
             }
             else
