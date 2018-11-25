@@ -195,6 +195,14 @@ public:
 					strcpy(fileLine, line.c_str());
 					
 					vector<string> tokens = split(fileLine,"\t");
+
+					if(tokens.size()>0 && tokens[0]==".snapshot")
+					{
+						cout<<"ooooo SNAPSHOT FILE REMOVED \n";
+						continue;
+					}
+
+
 					if(tokens.size()!=5){
 
 						cout<<"oooooooooooooooooooooooooooooooooooooooooooooooooo\n";
@@ -265,6 +273,14 @@ public:
 
 	vector<struct compareSnapshot> compareSnapshotFile(string sourcePath,string destinationPath){
 
+		char cwd[PATH_MAX];
+		if (getcwd(cwd, sizeof(cwd)) != NULL) 
+		{
+			writeLog(cwd,1);
+		}
+
+
+
 		writeLog("Entering into compareSnapshot",1);
 		writeLog(sourcePath,1);
 		writeLog(destinationPath,1);
@@ -277,6 +293,8 @@ public:
 
 		sourcePath += "/.snapshot";
 		destinationPath += "/.snapshot";
+
+		string sourceFileToDelete = sourcePath;
 
 		ifstream sourceSnapshot(sourcePath),destinationSnapshot(destinationPath);
 		
@@ -379,15 +397,30 @@ public:
 			cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
 		}
 
+
 		CreateSnapShotClass createSnapShotClassObj;
 		createSnapShotClassObj.prepareMetadataForSnapshot(toCharArrayFromString(sp),toCharArrayFromString(dp),1);
+
+		chdir(cwd);
+
 		createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sp),toCharArrayFromString(dp));
 
-		// int status = remove(toCharArrayFromString(sourcePath));
-		// if(status == -1){
-		// 	cout<<"Error while deleting .snapshot file in source "<<sourcePath<<"\n";
-		// }
+		chdir(cwd);
 
+		int status = remove(toCharArrayFromString(sourceFileToDelete));
+		writeLog("**************************************",1);
+		cout<<"**************************************"<<"\n";
+		
+
+		writeLog(sourceFileToDelete,1);
+		if(status == -1){
+
+			writeLog("////////////////////////////////////",1);	
+			// cout<<"Error while deleting .snapshot file in source "<<sourceFileToDelete<<"\n";
+		}
+
+		writeLog("**************************************",1);
+		cout<<"**************************************"<<"\n";
 		return diffList;
 	}
 
@@ -583,6 +616,8 @@ public:
 		else{
 			cout<<"Backup file "<<srcFilePath<<" deleted successfully"<<endl;
 		}
+
+		
 		return 0;
 	}
 

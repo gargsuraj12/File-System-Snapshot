@@ -1,2 +1,3 @@
-SourcePath	DestinationPath	CreationTimeStamp	LastExecutionTimeStamp
-/home/suraj/Desktop/OS/EndSemProject/OS_Snapshot/SrcLoc	/home/suraj/Desktop/OS/EndSemProject/OS_Snapshot/BackupLoc	2018-11-25-20-53-30	2018-11-25-20-53-30
+/home/prakashjha/os/workarea/CheckRepo1	/home/prakashjha/os/workarea/repoSnapShot1	2018-11-26-01-55-23	2018-11-26-03-54-59
+/home/prakashjha/os/workarea/CheckRepo3	/home/prakashjha/os/workarea/repoSnapShot3	2018-11-26-03-40-38	2018-11-26-03-55-14
+/home/prakashjha/os/workarea/CheckRepo2	/home/prakashjha/os/workarea/repoSnapShot2	2018-11-26-03-41-45	2018-11-26-03-55-14

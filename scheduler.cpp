@@ -232,11 +232,11 @@ vector<struct SnapShotMetaDataInformation> ProcessMetadataFileIntoCollection()
 	while (getline(file,line))
 	{
 		cout << " Line " << line << endl;
-		if(firstLine==false)
-		{
-			firstLine=true;
-			continue;
-		}
+		// if(firstLine==false)
+		// {
+		// 	firstLine=true;
+		// 	continue;
+		// }
 
  		tokens = split(line,"\t");
 
@@ -265,19 +265,26 @@ bool updateLastUpdatedTimeForSnapShot(map<string,string> DataWithValue)
 	std::string line;
 
 	std::ifstream file(MDPath);
-	ofstream temp;
-	temp.open("temp.txt");
+	
+	//ofstream temp;
+	//temp.open("temp.txt");
+	
 	vector<string> tokens;
 	bool firstLine=false;
 
+	vector<string> newfileLineToDumpForMetadata;
+
 	while (getline(file,line))
 	{
-		if(firstLine==false)
-		{
-			firstLine=true;
-			temp << line <<endl;
-			continue;
-		}
+		// if(firstLine==false)
+		// {
+		// 	firstLine=true;
+		// 	//temp << line <<endl;
+		// 	line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+		// 	line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+		// 	newfileLineToDumpForMetadata.push_back(line);
+		// 	continue;
+		// }
 
  		tokens = split(line,"\t");		
 		if(tokens.size()>0 && DataWithValue.find(tokens[0])!=DataWithValue.end())
@@ -288,17 +295,39 @@ bool updateLastUpdatedTimeForSnapShot(map<string,string> DataWithValue)
 			information.creationTimeStamp=tokens[2];
 			information.lastRunTime=DataWithValue[tokens[0]];
 			string strDataToWrite = PrepareData(information);
-			temp << strDataToWrite ;
+			//temp << strDataToWrite ;
+			strDataToWrite.erase( std::remove(strDataToWrite.begin(), strDataToWrite.end(), '\r'), strDataToWrite.end() );
+			strDataToWrite.erase( std::remove(strDataToWrite.begin(), strDataToWrite.end(), '\n'), strDataToWrite.end() );
+
+			newfileLineToDumpForMetadata.push_back(strDataToWrite);
 		}
 		else
 		{
-			temp << line <<endl;
+			//temp << line <<endl;
+			line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+			line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+			
+			newfileLineToDumpForMetadata.push_back(line);
 		}
 	}
 
-	temp.close();
-	remove(MDPath);
-	rename("temp.txt",MDPath);
+	file.close();
+
+	std::ofstream out;
+	out.open(MDPath);
+
+	for(auto itemContent : newfileLineToDumpForMetadata)
+	{
+		//if(itemContent!="")
+			itemContent=itemContent+"\n";
+			out << itemContent;
+	}
+	out.close();
+
+	//temp.close();
+	
+	//remove(MDPath);
+	//rename("temp.txt",MDPath);
 	return true;
 }
 
@@ -343,6 +372,16 @@ int main(){
 
 	vector<compareSnapshot> diffList;
 	Scheduler schedulerObj;
+	
+	//Create Map For Processing
+	map<string,string> AllDetailsForTimeUpdate;
+
+	//Create Map For Processing
+	//map<string,string> AllDetailsForTimeUpdate;
+	//AllDetailsForTimeUpdate["/home/prakashjha/os/workarea/CheckRepo"]=getCurrentTimeZone();
+	// schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+	
+/**/
 
 	// CreateSnapShotClass createSnapShotClassObj;
 	
@@ -362,22 +401,21 @@ int main(){
 		snapShotToProcess = schedulerObj.CreateManifest();
 
 		
-		//Create Map For Processing
-		map<string,string> AllDetailsForTimeUpdate;
 
 		for(int i=0;i<snapShotToProcess.size();i++){
 
 			cout<<"Scheduler: "<<snapShotToProcess[i].sourcePath<<" "<<snapShotToProcess[i].destinationPath<<"\n";
 
-			AllDetailsForTimeUpdate[snapShotToProcess[i].sourcePath]=getCurrentTimeZone();
 	
 			diffList = schedulerObj.processSnapShot(snapShotToProcess[i].sourcePath,snapShotToProcess[i].destinationPath,syncDataObj);
 			//schedulerObj.writeLog(" Post Process SnapShot ",1);
+			AllDetailsForTimeUpdate[snapShotToProcess[i].sourcePath]=getCurrentTimeZone();
 
 			if(diffList.size()>0){
 
 				// schedulerObj.performCURDOperation(diffList);
 
+				
 				thread t(schedulerObj.performCURDOperation,diffList,syncDataObj);	
 			 	t.join();
 
@@ -389,10 +427,15 @@ int main(){
 			 
 		}
 		
-		/*schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
-		bool success = schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+		schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
+		
+		if(AllDetailsForTimeUpdate.size()>0)
+			bool success = schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+		
 		schedulerObj.writeLog("Updated the time Stamp of Meta Data File",1);
-		*/
+		
+		AllDetailsForTimeUpdate.clear();
+
 		// unsigned int microseconds = 1200000;
 		schedulerObj.writeLog(" Scheduler About to Sleep ",1);
 		cout<<"no op2\n";
