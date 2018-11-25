@@ -191,7 +191,7 @@ class Rsync{
         fsetpos(dPtr, &position);
         int i=0;
         bool eof = false;
-        char ch;
+        char dummy = '#';
         // cout<<i++<<". Chunk in prepareUpdateIndexFile() is: "<<chunk<<endl;
         while(!eof){
             int x = fread(chunk, 1, chunkSize, dPtr);
@@ -226,6 +226,8 @@ class Rsync{
             //     eof = true;
             // }
         }
+        //writing dummy character in updateIndex file so that while merging last character doesn't miss out
+        fwrite(&dummy, 1, 1, uPtr);
         fclose(dPtr);
         fclose(uPtr);
         cout<<"Update file created successfully.."<<endl;
