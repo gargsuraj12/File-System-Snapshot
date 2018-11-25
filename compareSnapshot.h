@@ -501,9 +501,18 @@ public:
 				    isTextFile = true;
 				}
 
+				// if(isTextFile == true)
+				// {
+				// 	PerformModifyOperationForFile(strFullQualifiedPathSource,strFullQualifiedPathDestination);
+				// }
+
 				if(isTextFile == true)
 				{
-					PerformModifyOperationForFile(strFullQualifiedPathSource,strFullQualifiedPathDestination);
+					int x = PerformModifyOperationForFile(strFullQualifiedPathSource,strFullQualifiedPathDestination);
+					if(x == 0){
+						return true;
+					}
+					return false;
 				}
 
 				if(isTextFile==false && diffList[i].details.isFile==true){
@@ -513,31 +522,22 @@ public:
 		}
 
 	}
-	// int getChunkSizeOfFile(string filePath){
-	// 	struct stat infofile;
- //            // strcpy(temppath,source);
- //        int status = stat((char *)filePath.c_str(),&infofile);
- //        if(status != 0){
- //        	cout<<"Unable to get file stat for"<<filePath<<endl;
- //        	return -1;
- //        }else{
- //        	cout<<"file Size is: "<<infofile.st_size<<endl;
- //        }
- //        return ceil(sqrt(infofile.st_size));
-	// }
 
-	int PerformModifyOperationForFile(string srcFilePath, string backupFilePath)
-	{
-		
-		cout << " ------------- PerformModifyOperationForFile  " << endl;
-        cout << " backupFilePath "  << backupFilePath << endl;
-		
+	
+	int PerformModifyOperationForFile(string srcFilePath, string backupFilePath){
+		cout << "12---------- Inside PerformModifyOperationForFile() ----------" << endl;
+        cout<<"Source File Path is: "<< srcFilePath<<endl;
+		cout<<"Backup File Path is: "<< backupFilePath << endl;
+		int status;
         int chunkSize = getChunkSizeOfFile(backupFilePath);
         cout << " chunkSize "  << chunkSize << endl;
-        if(chunkSize == 0){
-        	cout << " chunkSize is zero thus copying from "<< srcFilePath << " to "<<backupFilePath<< endl;
+        if(chunkSize <= 0){
+			string copyDest = SplitFilename(backupFilePath);
+        	cout<<"ChunkSize is less than or equal to zero thus directly copying the source file "<< srcFilePath << " at destination : "<< copyDest<< endl;
+			
         	CopyFunctionality copyFunctionalityObj;
-        	copyFunctionalityObj.copy(toCharArrayFromString(srcFilePath),toCharArrayFromString(backupFilePath),1);
+        	copyFunctionalityObj.copy(toCharArrayFromString(srcFilePath),toCharArrayFromString(copyDest),1);
+			cout<<"Source file "<<srcFilePath<<" is be copied at destination.."<<endl;
         	return 0;
         }
         Rsync rObj;
@@ -545,7 +545,7 @@ public:
 		
 		if(indexFilePath == ""){
 			cout<<"Error while creating index file before updation of file "<<backupFilePath<<endl;
-		return -1;
+			return -1;
 		}
 		else{
 			cout<<"index file successfully created before updation of file "<<backupFilePath<<endl;
@@ -556,11 +556,12 @@ public:
 			cout<<"Error while creating .Updateindex file for file "<<srcFilePath<<endl;
 			return -1;
 		}
-		int status = rObj.updateDataBackupFile(backupFilePath, updateIndexFilePath, chunkSize);
+		status = rObj.updateDataBackupFile(backupFilePath, updateIndexFilePath, chunkSize);
 		if(status == -1){
 			cout<<"Error while updating Backup file "<<backupFilePath<<endl;
-		return -1;
-		}else{
+			return -1;
+		}
+		else{
 			cout<<"Backup file "<<backupFilePath<<" updated successfully"<<endl;
 		}
 
@@ -568,19 +569,20 @@ public:
 		status = remove((char *)indexFilePath.c_str());
 		if(status == -1){
 			cout<<"Error while deleting .index file for backup file "<<backupFilePath<<endl;
-		return -1;
-		}else{
+			return -1;
+		}
+		else{
 			cout<<"index file "<<backupFilePath<<" deleted successfully"<<endl;
 		}
 
 		status = remove((char *)updateIndexFilePath.c_str());
 		if(status == -1){
 			cout<<"Error while deleting .updateIndex file for src file "<<srcFilePath<<endl;
-		return -1;
-		}else{
+			return -1;
+		}
+		else{
 			cout<<"Backup file "<<srcFilePath<<" deleted successfully"<<endl;
 		}
-
 		return 0;
 	}
 
