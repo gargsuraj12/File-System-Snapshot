@@ -471,9 +471,6 @@ public:
 				
 				sPath = SRCPATH+"/"+diffList[i].details.fullQualifiedPath;
 				dPath = DESTPATH+"/"+diffList[i].details.fullQualifiedPath;
-				
-				// sPath = SRCPATH+diffList[i].details.fullQualifiedPath;
-				// dPath = DESTPATH+diffList[i].details.fullQualifiedPath;
 
 				string strFullQualifiedPathDestination = dPath;
 				string strFullQualifiedPathSource = sPath;
@@ -500,9 +497,14 @@ public:
 				bool isTextFile = false;
 				if(sPath.substr(sPath.find_last_of(".") + 1) == "txt") 
 				{
-				    std::cout << "Yes...txt file is found $$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
+				    std::cout << "Yes...txt is found $$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
 				    isTextFile = true;
 				}
+
+				// if(isTextFile == true)
+				// {
+				// 	PerformModifyOperationForFile(strFullQualifiedPathSource,strFullQualifiedPathDestination);
+				// }
 
 				if(isTextFile == true)
 				{
@@ -521,6 +523,7 @@ public:
 
 	}
 
+	
 	int PerformModifyOperationForFile(string srcFilePath, string backupFilePath){
 		cout << "12---------- Inside PerformModifyOperationForFile() ----------" << endl;
         cout<<"Source File Path is: "<< srcFilePath<<endl;
