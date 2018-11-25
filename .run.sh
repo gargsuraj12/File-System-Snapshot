@@ -21,10 +21,10 @@ function checkC() {
 function startScheduler(){
 	echo "startScheduler"
 	isError=`echo 0`
-#bash /home/prakashjha/os/workarea/OS_Snapshot/.run.sh
+
 	if [ "$isError" == "0" ]
 	then
-		EXEC=`echo scheduler`
+		EXEC=`echo customScheduler`
 		SRC=`echo scheduler.cpp -pthread -lcrypto`
 		#if [ "$SRC" -nt "$EXEC" ]
 		#then
@@ -84,14 +84,14 @@ function restoreSnapShot() {
 	#echo $isError
 	if [ "$isError" == "0" ]
 	then
-		EXEC=`echo Main`
-		SRC=`echo Main.cpp`
-		if [ "$SRC" -nt "$EXEC" ]
-		then
-			echo "Rebuliding Class File"
+		EXEC=`echo restoreSnapShot`
+		SRC=`echo restoreSnapShot.cpp -lcrypto -pthread`
+		#if [ "$SRC" -nt "$EXEC" ]
+		#then
+			echo "Rebuliding Restore Snapshot file Class File Need to Comment Out"
 			$CC -o $EXEC $SRC
-		fi
-		RESULT=`./$EXEC restoreSnapShot $1`
+		#fi
+		RESULT=`./$EXEC $1`
 		if [ "$?" == "110" ]
 		then
 			echo "Successfully Instered into SnapShot File"
@@ -129,6 +129,25 @@ function removeSnapShot() {
 		elif [ "$RESULT" = 120 ]
 		then
 			echo "Successfully removed the SnapShot"
+		fi
+		
+	fi	
+}
+
+function stopScheduler() {  
+	echo "stopScheduler"
+	isError=`echo 0`
+	if [ "$isError" == "0" ]
+	then
+		PIDOFSCHEDULER=`ps -eo pid,comm | awk '$2 == "customScheduler" {print $1}'`
+		if [ "$PIDOFSCHEDULER" = "" ]
+		then
+			echo "Scheduler is not running"
+		fi
+		if [ "$PIDOFSCHEDULER" > 0 ]
+		then
+			RESULT=`kill $PIDOFSCHEDULER`
+			echo "Process terminated"
 		fi
 		
 	fi	
