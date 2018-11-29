@@ -525,7 +525,7 @@ public:
 
 	
 	int PerformModifyOperationForFile(string srcFilePath, string backupFilePath){
-		cout << "12---------- Inside PerformModifyOperationForFile() ----------" << endl;
+		cout << "16---------- Inside PerformModifyOperationForFile() ----------" << endl;
         cout<<"Source File Path is: "<< srcFilePath<<endl;
 		cout<<"Backup File Path is: "<< backupFilePath << endl;
 		int status;
@@ -564,8 +564,9 @@ public:
 		else{
 			cout<<"Backup file "<<backupFilePath<<" updated successfully"<<endl;
 		}
-
+		perror("1111Checking Cursor");
 		//Comment below code if you want to see the status of .index and .updateIndex files
+		/*
 		status = remove((char *)indexFilePath.c_str());
 		if(status == -1){
 			cout<<"Error while deleting .index file for backup file "<<backupFilePath<<endl;
@@ -583,6 +584,8 @@ public:
 		else{
 			cout<<"Backup file "<<srcFilePath<<" deleted successfully"<<endl;
 		}
+		*/
+	
 		return 0;
 	}
 

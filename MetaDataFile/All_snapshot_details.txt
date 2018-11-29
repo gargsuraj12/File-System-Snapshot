@@ -1,2 +1,2 @@
 SourcePath	DestinationPath	CreationTimeStamp	LastExecutionTimeStamp
-/home/suraj/Desktop/OS/EndSemProject/OS_Snapshot/SrcLoc	/home/suraj/Desktop/OS/EndSemProject/OS_Snapshot/BackupLoc	2018-11-25-20-53-30	2018-11-25-20-53-30
+/home/suraj/Desktop/OS/Project/OS_Snapshot/SrcLoc	/home/suraj/Desktop/OS/Project/OS_Snapshot/BackupLoc	2018-11-29-23-52-40	2018-11-29-23-52-40

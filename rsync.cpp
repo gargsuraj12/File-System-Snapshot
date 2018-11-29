@@ -336,11 +336,10 @@ class Rsync{
 
 int main(){
     int ch;
-    // cin>>ch;
+    cin>>ch;
     Rsync rObj;
-    
-    string srcFilePath = "/home/prakashjha/os/workarea/OS_Snapshot/df.txt";
-    string backupFilePath = "/home/prakashjha/os/workarea/OS_Snapshot/bak.txt";
+    string srcFilePath = "SrcLoc/df.txt";
+    string backupFilePath = "BackupLoc/df.txt";
     int chunkSize = getChunkSizeOfFile(backupFilePath);
     string indexFilePath;
     string updateIndexFilePath;
@@ -356,6 +355,5 @@ int main(){
     }else{
         cout<<"Backup file updated successfully.."<<endl;
     }
-
     return 0;
 }
