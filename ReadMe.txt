@@ -139,3 +139,16 @@ removeSnapShot /home/prakashjha/os/workarea/OS_Snapshot/repo
 ./createSnapshot 
 /home/prakashjha/os/workarea/OS_Snapshot/repo                                                     
 /home/prakashjha/os/workarea/OS_Snapshot/repoSnapShot
+
+
+/////////////////////////////////////////////////////////////////////////
+
+createSnapShot {sourcePath} {destinationPath}
+
+removeSnapShot {sourcePath}
+
+restoreSnapShot {sourcePath}
+
+startScheduler
+
+stopScheduler

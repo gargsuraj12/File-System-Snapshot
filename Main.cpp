@@ -6,6 +6,7 @@
 #include <ctime>
 #include <fstream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -84,7 +85,7 @@ string PrepareData(struct SnapShotMetaDataInformation info)
 		strData.append(info.lastRunTime);
 		strData.erase( std::remove(strData.begin(), strData.end(), '\r'), strData.end() );
 		strData.erase( std::remove(strData.begin(), strData.end(), '\n'), strData.end() );
-		//strData.append("\n");
+		strData.append("\n");
 	}
 	return strData;
 }
@@ -153,31 +154,54 @@ bool replaceCurrentLineInFile(string sourceNameToremove)
 	std::string line;
 
 	std::ifstream file(MDPath);
-	ofstream temp;
-	temp.open("temp.txt");
+	
+	//ofstream temp;
+	//temp.open("temp.txt");
+	
 	vector<string> tokens;
 	bool firstLine=false;
 
+	vector<string> newfileLineToDumpForMetadata;
+
 	while (getline(file,line))
 	{
-		if(firstLine==false)
-		{
-			firstLine=true;
-			temp << line << endl;
-			continue;
-		}
+		// if(firstLine==false)
+		// {
+		// 	firstLine=true;
+		// 	//temp << line <<endl;
+		// 	line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+		// 	line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+		// 	newfileLineToDumpForMetadata.push_back(line);
+		// 	continue;
+		// }
 
- 		tokens = split(line,"\t");	
-		//cout << tokens[0]  << ":" << sourceNameToremove << endl;	
-		if(tokens.size()>0 && iequals(tokens[0],sourceNameToremove)==false)
+ 		tokens = split(line,"\t");		
+		if(tokens.size()>0 && (tokens[0] != sourceNameToremove))
 		{
-			temp << line << endl;
+			struct SnapShotMetaDataInformation information;
+			information.sourcePath=tokens[0];
+			information.destinationPath=tokens[1];
+			information.creationTimeStamp=tokens[2];
+			information.lastRunTime=tokens[3];
+			string strDataToWrite = PrepareData(information);
+
+			strDataToWrite.erase( std::remove(strDataToWrite.begin(), strDataToWrite.end(), '\r'), strDataToWrite.end() );
+			strDataToWrite.erase( std::remove(strDataToWrite.begin(), strDataToWrite.end(), '\n'), strDataToWrite.end() );
+			//temp << strDataToWrite ;
+			newfileLineToDumpForMetadata.push_back(strDataToWrite);
 		}
 	}
 
-	temp.close();
-	remove(MDPath);
-	rename("temp.txt",MDPath);
+	file.close();
+
+	std::ofstream out;
+	out.open(MDPath);
+
+	for(auto itemContent : newfileLineToDumpForMetadata)
+	{
+		out << itemContent << endl;
+	}
+	out.close();
 	return true;
 }
 
@@ -191,11 +215,11 @@ bool checkExistenceOfSource(string sourceNameToCheck)
 
 	while (getline(file,line))
 	{
-		if(firstLine==false)
-		{
-			firstLine=true;
-			continue;
-		}
+		// if(firstLine==false)
+		// {
+		// 	firstLine=true;
+		// 	continue;
+		// }
 
  		tokens = split(line,"\t");	
 		//cout << tokens[0]  << ":" << sourceNameToremove << endl;	
@@ -238,6 +262,79 @@ void performCreateSnapShotFileOperation(string sourceParam,string destinationPar
     CreateSnapShotClassObject.prepareMetadataForSnapshot(source,destination,1);
     CreateSnapShotClassObject.CreateSnapshotFile(source,destination);
     chdir(cwd);
+}
+
+
+bool updateLastUpdatedTimeForSnapShot(map<string,string> DataWithValue)
+{
+	string deleteline;
+	std::string line;
+
+	std::ifstream file(MDPath);
+	
+	//ofstream temp;
+	//temp.open("temp.txt");
+	
+	vector<string> tokens;
+	bool firstLine=false;
+
+	vector<string> newfileLineToDumpForMetadata;
+
+	while (getline(file,line))
+	{
+		// if(firstLine==false)
+		// {
+		// 	firstLine=true;
+		// 	//temp << line <<endl;
+		// 	line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+		// 	line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+		// 	newfileLineToDumpForMetadata.push_back(line);
+		// 	continue;
+		// }
+
+ 		tokens = split(line,"\t");		
+		if(tokens.size()>0 && DataWithValue.find(tokens[0])!=DataWithValue.end())
+		{
+			struct SnapShotMetaDataInformation information;
+			information.sourcePath=tokens[0];
+			information.destinationPath=tokens[1];
+			information.creationTimeStamp=tokens[2];
+			information.lastRunTime=DataWithValue[tokens[0]];
+			string strDataToWrite = PrepareData(information);
+			//temp << strDataToWrite ;
+			strDataToWrite.erase( std::remove(strDataToWrite.begin(), strDataToWrite.end(), '\r'), strDataToWrite.end() );
+			strDataToWrite.erase( std::remove(strDataToWrite.begin(), strDataToWrite.end(), '\n'), strDataToWrite.end() );
+
+			newfileLineToDumpForMetadata.push_back(strDataToWrite);
+		}
+		else
+		{
+			//temp << line <<endl;
+			line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+			line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+			
+			newfileLineToDumpForMetadata.push_back(line);
+		}
+	}
+
+	file.close();
+
+	std::ofstream out;
+	out.open(MDPath);
+
+	for(auto itemContent : newfileLineToDumpForMetadata)
+	{
+		//if(itemContent!="")
+			itemContent=itemContent+"\n";
+			out << itemContent;
+	}
+	out.close();
+
+	//temp.close();
+	
+	//remove(MDPath);
+	//rename("temp.txt",MDPath);
+	return true;
 }
 
 //110 Success With Addition into File 
@@ -285,9 +382,16 @@ int main(int argc,char *argv[])
 		writeLog("Main : Performing Entry in SnapShot Metadata File : Complete ");				
 	}
 
-	if(strCommandName=="restoreSnapShot")
+	//only for testing 
+	if(strCommandName=="update")
 	{
 		// Call to Another method of restoring snapshot 
+
+		 map<string,string> AllDetailsForTimeUpdate;
+		 AllDetailsForTimeUpdate[argv[2]]=getCurrentTimeZone();
+		 updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+	
+
 	}
 
 	//if(strCommandName=="stopSnapshotScheduler")

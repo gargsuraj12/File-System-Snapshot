@@ -82,8 +82,8 @@ function restoreSnapShot() {
 		isError=`echo -1`
 	fi	
 	#echo $isError
-	if [ "$isError" == "0" ]
-	then
+	# if [ "$isError" == "0" ]
+	# then
 		EXEC=`echo restoreSnapShot`
 		SRC=`echo restoreSnapShot.cpp -lcrypto`
 		#if [ "$SRC" -nt "$EXEC" ]
@@ -97,7 +97,7 @@ function restoreSnapShot() {
 			echo "Successfully Instered into SnapShot File"
 		fi
 		
-	fi
+	# sfi
 	
 		
 }
@@ -139,7 +139,8 @@ function stopScheduler() {
 	isError=`echo 0`
 	if [ "$isError" == "0" ]
 	then
-		PIDOFSCHEDULER=`ps -eo pid,comm | awk '$2 == "customScheduler" {print $1}'`
+		PIDOFSCHEDULER=`pgrep customScheduler`
+		#PIDOFSCHEDULER=`pgrep firefox`
 		if [ "$PIDOFSCHEDULER" = "" ]
 		then
 			echo "Scheduler is not running"
