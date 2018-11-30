@@ -1,6 +1,3 @@
-//#include "rsync.h"
-//#include "library.h"
-
 #include<stdio.h>
 #include<iostream>
 #include<stdlib.h>
@@ -130,7 +127,7 @@ class CopyFunctionality
         ////printf("file descriptor fd_for_w = %d\n",fd_for_w);
         if(fd_for_w == -1){
             printf ("error number %d\n", errno);
-            perror("program");
+            //perror("program");
         }
         ////printf("file opened \n");
         int sz1,sz;
@@ -148,7 +145,7 @@ class CopyFunctionality
         int close_id = close (fd);
         if(close_id < 0){
             printf("erroe while closeing file 1\n");
-            perror("c1");
+            // perror("c1");
             //exit(1);
         }
         ////printf("file clsoed");
@@ -156,7 +153,7 @@ class CopyFunctionality
         close_id = close (fd_for_w);
         if(close_id < 0){
             printf("erroe while closeing\n");
-            perror("c1");
+            // perror("c1");
             //exit(1);
         }
         chdir(savecurdir);
@@ -241,8 +238,8 @@ class CopyFunctionality
                     //printf("is_reg file is %s\n",e->d_name);
                 }
             }
-            else
-                perror("invalid path");
+            // else
+                // perror("invalid path");
             return;
         }
         //printcwd();
@@ -278,7 +275,7 @@ class CopyFunctionality
                         char errmsg[256];
                         strcpy(errmsg,"cant do mkdir for ");
                         strcat(errmsg,dpath);
-                        perror(errmsg);
+                        // perror(errmsg);
                     }
                     cout<<"path for directory is "<<path<<endl;
                     copy(path , dpath , 0);

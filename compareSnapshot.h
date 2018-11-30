@@ -466,14 +466,14 @@ public:
 				if(diffList[i].details.isFile==false)
 				{
 					if (mkdir(toCharArrayFromString(dPath),0777) == -1)
-                        perror("cant do mkdir in compareSnapshot");	
+                        // perror("cant do mkdir in compareSnapshot");	
 				}else{
 					dPath = SplitFilename(dPath);
 				}
 				
-						perror("++++++++Creating File/Folder ");
-						perror("for source path: ");
-						perror(toCharArrayFromString(sPath));
+						// perror("++++++++Creating File/Folder ");
+						// perror("for source path: ");
+						// perror(toCharArrayFromString(sPath));
 						//writeLog("Creating File/Folder for Destination Path : ",1);
 						writeLog("for destination path: ",1);
 						writeLog(dPath,1);
@@ -558,7 +558,7 @@ public:
 
 	
 	int PerformModifyOperationForFile(string srcFilePath, string backupFilePath){
-		cout << "16---------- Inside PerformModifyOperationForFile() ----------" << endl;
+		cout << "12---------- Inside PerformModifyOperationForFile() ----------" << endl;
         cout<<"Source File Path is: "<< srcFilePath<<endl;
 		cout<<"Backup File Path is: "<< backupFilePath << endl;
 		int status;
@@ -597,7 +597,7 @@ public:
 		else{
 			cout<<"Backup file "<<backupFilePath<<" updated successfully"<<endl;
 		}
-		perror("1111Checking Cursor");
+
 		//Comment below code if you want to see the status of .index and .updateIndex files
 		status = remove((char *)indexFilePath.c_str());
 		if(status == -1){
@@ -616,6 +616,8 @@ public:
 		else{
 			cout<<"Backup file "<<srcFilePath<<" deleted successfully"<<endl;
 		}
+
+		
 		return 0;
 	}
 

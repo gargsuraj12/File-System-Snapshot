@@ -22,7 +22,7 @@
 #define MDPathLogFile "./LogFile/logfile.txt"
 //#define timeInterval 1200000 //20 minutes
 #define timeInterval 15 //5sec
-//#define MODVAL 1048576
+#define MODVAL 1048576
 // static const string DELIM = "$";
 
 using namespace std;

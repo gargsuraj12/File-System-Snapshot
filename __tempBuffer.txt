@@ -1,6 +1,0 @@
-/home/prakashjha/os/workarea/OS_Snapshot/repoSnapShot
-/home/prakashjha/os/workarea/CheckRepo
-snapshot created 2018 11 25 18 11 21
-2_MyTXTSmaple.txt	file	prakashjha	rw-r--r--	Sun Nov 25 17:15:04 2018
-test.txt	file	prakashjha	rw-r--r--	Sun Nov 25 17:15:04 2018
-MyTXTSmaple.txt	file	prakashjha	rw-r--r--	Sun Nov 25 17:15:04 2018

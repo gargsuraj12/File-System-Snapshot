@@ -25,14 +25,14 @@ struct checksumValues{
 };
 
 int getChunkSizeOfFile(string filePath){
-	struct stat infofile;
+    struct stat infofile;
         // strcpy(temppath,source);
     int status = stat((char *)filePath.c_str(),&infofile);
     if(status != 0){
-    	cout<<"Unable to get file stat for"<<filePath<<endl;
-    	return -1;
+        cout<<"Unable to get file stat for"<<filePath<<endl;
+        return -1;
     }else{
-    	cout<<"file Size is: "<<infofile.st_size<<endl;
+        cout<<"file Size is: "<<infofile.st_size<<endl;
     }
     return ceil(sqrt(infofile.st_size));
 }

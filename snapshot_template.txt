@@ -1,7 +1,0 @@
-SourcePath:/home/prakashjha/Desktop/dir1
-DestinationPath:/home/prakashjha/Desktop/dir1/Destination
-SnapShotCreationTimeStamp:
-full_qualified_path	file/dir	ownership	LastModifiedDate	AccessRights
-dma.txt			file		username	29-10-2990 12:10PM	-rwxrwxrwx
-dir1/dir2		dir		username	29-10-2990 12:10PM	-rwxrwxrwx
-dir2			dir		username	29-10-2990 12:10PM	-rwxrwxrwx

@@ -28,7 +28,7 @@ void prepareMetadataForSnapshot(char * source , char * destination,int isFirst){
     }
     int chdirval = chdir(source);
     if(chdir(source)){
-        perror("invalid path");
+        // perror("invalid path");
         return;
     }
     //printcwd();
