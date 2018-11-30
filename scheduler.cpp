@@ -2,14 +2,110 @@
 
 #define MDSchedulerLogFilePath "./LogFile/SchedulerLog.txt"
 
+#define CurrentlyRunningSnapShotFile "./MetaDataFile/CurrentlyRunningSnapShotFile.txt"
+
 using namespace std;
 
 
 static int counterForThread=0;
 
+string getCurrentTimeZone()
+{
+    std::time_t rawtime;
+    std::tm* timeinfo;
+    char buffer[80];
+    // char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
+
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+
+    std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
+    std::puts(buffer);
+	string finalresult(buffer);
+	// delete buffer;
+	return finalresult;
+}
+
 class Scheduler{
 
 public: 
+
+
+bool writeToEndOfFile(string Data,string path)
+{
+	bool success = false;
+	if(Data!="")
+	{
+		std::ofstream out;
+ 		out.open(path, std::ios::app);
+ 		out << Data << endl;
+		out.close();
+	}
+	return success;
+}
+
+// remove the line from file with name as passed sourceName 
+bool replaceCurrentLineInFile(string sourceNameToremove,string path)
+{
+
+	writeLog("Entering into replaceCurrentLineInFile for CurrentlyRunningSnapShotFile",1);
+
+	try
+	{
+		std::string line;
+		vector<string> newfileLineToDumpForMetadata;
+
+		std::ifstream file(path);
+		
+		bool firstLine=false;
+
+		while (getline(file,line))
+		{
+			if(line != sourceNameToremove)
+			{
+				line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+				line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+				newfileLineToDumpForMetadata.push_back(line);
+			}
+		}
+
+	file.close();
+
+		std::ofstream out;
+		out.open(path);
+		for(auto itemContent : newfileLineToDumpForMetadata)
+		{
+			out << itemContent << endl;
+		}
+		out.close();
+	}
+	catch(const char* msg)
+	{
+			writeLog(msg,-1);
+	}
+	writeLog("Exiting into replaceCurrentLineInFile : CurrentlyRunningSnapShotFile ",1);
+
+	return true;
+}
+
+vector<string> GetAllEntriesOfCurrentlyRunningSnapShot(string path)
+{
+	std::string line;
+	std::ifstream file(path);
+	vector<string> newfileLineToDumpForMetadata;
+		
+		bool firstLine=false;
+
+		while (getline(file,line))
+		{
+				line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+				line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+				newfileLineToDumpForMetadata.push_back(line);
+		}
+
+	file.close();
+	return newfileLineToDumpForMetadata;
+}
 
 bool writeLog(string Data,int flag)
 {
@@ -33,7 +129,11 @@ bool writeLog(string Data,int flag)
 	return success;
 }
 
-void static performCURDOperation(vector<compareSnapshot> diffList,SyncData syncDataObj){
+
+
+
+void static performCURDOperation(vector<compareSnapshot> diffList,SyncData syncDataObj,
+	map<string,string> AllDetailsForTimeUpdate){
 
 	Scheduler schedulerobj;
 	
@@ -52,7 +152,29 @@ void static performCURDOperation(vector<compareSnapshot> diffList,SyncData syncD
 		schedulerobj.writeLog("Thread Stopped Preperation CURD Ended ",1);
 	}
 
+	//$$$$$$$$$$$$$$$$$$$$
+	schedulerobj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
+	if(AllDetailsForTimeUpdate.size()>0)
+	{
+			// Create a map iterator and point to beginning of map
+		std::map<std::string, string>::iterator it = AllDetailsForTimeUpdate.begin();
+	 
+		while (it != AllDetailsForTimeUpdate.end())
+		{
+			it->second=getCurrentTimeZone();
+			schedulerobj.replaceCurrentLineInFile(it->first,CurrentlyRunningSnapShotFile);
+	 		it++;
+		}
+
+		bool success = schedulerobj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+	}
+	schedulerobj.writeLog("Updated the time Stamp of Meta Data File",1);
+	AllDetailsForTimeUpdate.clear();
+
 	schedulerobj.writeLog("Exiting into performCURDOperation",1);
+
+
+
 }
 
 
@@ -125,6 +247,10 @@ vector<compareSnapshot> processSnapShot(string sourcePath,string destinationPath
 vector<struct SnapShotMetaDataInformation> CreateManifest()
 {
 		cout<<"Inside Manifest function\n";
+
+		vector<string> CurrentlyRunningSnapshot = GetAllEntriesOfCurrentlyRunningSnapShot(CurrentlyRunningSnapShotFile);
+
+
 		vector<struct SnapShotMetaDataInformation> metadataContent = ProcessMetadataFileIntoCollection();
 				cout<<"Count : &&&&&&&777 : " <<  metadataContent.size()<< endl;
 		vector<struct SnapShotMetaDataInformation> metadataToProcessForScheduler;
@@ -132,6 +258,12 @@ vector<struct SnapShotMetaDataInformation> CreateManifest()
 		{
 			for(auto itemContent : metadataContent)
 			{
+
+				if(CurrentlyRunningSnapshot.size()>0 && 
+				find(CurrentlyRunningSnapshot.begin(),CurrentlyRunningSnapshot.end(),
+						itemContent.sourcePath)!=CurrentlyRunningSnapshot.end())
+					continue;
+
 				vector<string> tC = split(itemContent.lastRunTime,"-");
 				int year;int month;int day;int hour; int min;int sec;
 				if(tC.size()>=6)
@@ -360,24 +492,11 @@ string PrepareData(struct SnapShotMetaDataInformation info)
 	return strData;
 }
 
+
+
 };
 
-string getCurrentTimeZone()
-{
-    std::time_t rawtime;
-    std::tm* timeinfo;
-    char buffer[80];
-    // char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
 
-    std::time(&rawtime);
-    timeinfo = std::localtime(&rawtime);
-
-    std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
-    std::puts(buffer);
-	string finalresult(buffer);
-	// delete buffer;
-	return finalresult;
-}
 
 int main(){
 
@@ -426,32 +545,59 @@ int main(){
 			//schedulerObj.writeLog(" Post Process SnapShot ",1);
 			AllDetailsForTimeUpdate[snapShotToProcess[i].sourcePath]=getCurrentTimeZone();
 
+			// If In File Not Present Then Only Make Entry In File 
+			vector<string> CurrentlyExecutingSnapShot = schedulerObj.GetAllEntriesOfCurrentlyRunningSnapShot(CurrentlyRunningSnapShotFile);
+
+
 			if(diffList.size()>0){
 
-				// schedulerObj.performCURDOperation(diffList);
+				if(find( CurrentlyExecutingSnapShot.begin(), CurrentlyExecutingSnapShot.end(),snapShotToProcess[i].sourcePath)
+					==CurrentlyExecutingSnapShot.end())
+				{
+					schedulerObj.writeToEndOfFile(snapShotToProcess[i].sourcePath,CurrentlyRunningSnapShotFile);
+				}
+				else
+				{
+					schedulerObj.writeLog("-------------- Path Will Not Be Added For Running SnapShot  ",1);
+					schedulerObj.writeLog(snapShotToProcess[i].sourcePath,1);	
+				}
+				
 				schedulerObj.writeLog("```````````````````````````````````````````````````````````````````````````````",1);
 				schedulerObj.writeLog(snapShotToProcess[i].sourcePath,1);
 					
+				// schedulerObj.performCURDOperation(diffList,syncDataObj);
 
-				thread t(schedulerObj.performCURDOperation,diffList,syncDataObj);	
-			 	t.detach();
+
+				thread t(schedulerObj.performCURDOperation,diffList,syncDataObj,AllDetailsForTimeUpdate);	
+			 	AllDetailsForTimeUpdate.clear();
+			 	t.join();
+
 
 			}else{
+
+
 				cout<<"no op\n";
 				chdir(cwd);
+
+				schedulerObj.writeLog("No Updation : Scheduler Started updating time Stamp of Meta Data File",1);
+				if(AllDetailsForTimeUpdate.size()>0)
+				{
+					bool success = schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+				}
+				schedulerObj.writeLog("Updated the time Stamp of Meta Data File",1);
+				AllDetailsForTimeUpdate.clear();
+
+
 				schedulerObj.writeLog("No operation to perform",1);		
 			}
 			 
 		}
 		schedulerObj.writeLog("*******************************************************************************",1);
-		schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
-		
-		if(AllDetailsForTimeUpdate.size()>0)
-			bool success = schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
-		
-		schedulerObj.writeLog("Updated the time Stamp of Meta Data File",1);
-		
-		AllDetailsForTimeUpdate.clear();
+		// schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
+		// if(AllDetailsForTimeUpdate.size()>0)
+		// 	bool success = schedulerObj.updateLastUpdatedTimeForSnapShot(AllDetailsForTimeUpdate);
+		// schedulerObj.writeLog("Updated the time Stamp of Meta Data File",1);
+		// AllDetailsForTimeUpdate.clear();
 
 		// unsigned int microseconds = 1200000;
 		schedulerObj.writeLog(" Scheduler About to Sleep ",1);

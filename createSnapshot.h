@@ -39,6 +39,7 @@ void prepareMetadataForSnapshot(char * source , char * destination,int isFirst){
     strcpy(path,source);
     strcat(path,"/");
     while((e = readdir(dir))!=NULL){
+        
         if (!strcmp(e->d_name, ".") || !strcmp(e->d_name, ".."))
             continue;
         //printf("%s\n", e->d_name);

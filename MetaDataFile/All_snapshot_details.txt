@@ -1,2 +1,5 @@
-/home/prakashjha/os/workarea/CheckRepo1	/home/prakashjha/os/workarea/repoSnapShot1	2018-11-30-17-06-18	2018-11-30-18-17-21
-/home/prakashjha/Desktop/source	/home/prakashjha/Desktop/backup	2018-11-30-18-09-48	2018-11-30-18-16-49
+/home/prakashjha/Desktop/testing/CheckRepo	/home/prakashjha/Desktop/testing/reposnapshot	2018-11-30-23-56-59	2018-12-01-00-53-30
+/home/prakashjha/Desktop/testing/CheckRepo1	/home/prakashjha/Desktop/testing/reposnapshot1	2018-11-30-23-57-19	2018-12-01-00-53-30
+/home/prakashjha/Desktop/testing/CheckRepo2	/home/prakashjha/Desktop/testing/reposnapshot2	2018-11-30-23-57-59	2018-12-01-00-53-30
+/home/prakashjha/Desktop/testing/CheckRepo3	/home/prakashjha/Desktop/testing/reposnapshot3	2018-12-01-00-10-38	2018-12-01-00-53-30
+/home/prakashjha/Desktop/testing/bigsize	/home/prakashjha/Desktop/testing/bigsizerepo	2018-12-01-00-46-52	2018-12-01-00-53-30

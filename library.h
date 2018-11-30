@@ -21,7 +21,13 @@
 #define MDPath "./MetaDataFile/All_snapshot_details.txt"
 #define MDPathLogFile "./LogFile/logfile.txt"
 //#define timeInterval 1200000 //20 minutes
-#define timeInterval 30 //5sec
+#define timeInterval 15 //5sec
+
+// if 1 then Update Index file will be deleted from location
+// if 0 the Update Index file will be not deleted from location 
+		
+
+#define toShowUpdateIndexFileOfRsync 0
 // #define MODVAL 1048576
 // static const string DELIM = "$";
 

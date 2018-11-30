@@ -417,9 +417,9 @@ public:
 
 		cout<<"inside comparesnapshotfile\n";
 		
-		for(int i=0;i<diffList.size();i++){
-			cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
-		}
+		// for(int i=0;i<diffList.size();i++){
+		// 	cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
+		// }
 
 
 		CreateSnapShotClass createSnapShotClassObj;
@@ -634,6 +634,12 @@ public:
 		}
 
 		//Comment below code if you want to see the status of .index and .updateIndex files
+
+		// if 1 then Update Index file will be deleted from location
+		// if 0 the Update Index file will be not deleted from location 
+		if(toShowUpdateIndexFileOfRsync==0)
+		{
+			
 		status = remove((char *)indexFilePath.c_str());
 		if(status == -1){
 			cout<<"Error while deleting .index file for backup file "<<backupFilePath<<endl;
@@ -643,13 +649,15 @@ public:
 			cout<<"index file "<<backupFilePath<<" deleted successfully"<<endl;
 		}
 
-		status = remove((char *)updateIndexFilePath.c_str());
-		if(status == -1){
-			cout<<"Error while deleting .updateIndex file for src file "<<srcFilePath<<endl;
-			return -1;
-		}
-		else{
-			cout<<"Backup file "<<srcFilePath<<" deleted successfully"<<endl;
+		
+			status = remove((char *)updateIndexFilePath.c_str());
+			if(status == -1){
+				cout<<"Error while deleting .updateIndex file for src file "<<srcFilePath<<endl;
+				return -1;
+			}
+			else{
+				cout<<"Backup file "<<srcFilePath<<" deleted successfully"<<endl;
+			}
 		}
 
 		writeLog("Exiting into PerformModifyOperationForFile",1);
