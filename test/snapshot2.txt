@@ -1,9 +1,0 @@
-/home/prakashjha/Desktop/dir1
-p
-snapshot created 2018	11	23	3	27	7
-/home/prakashjha/Desktop/dir1/snapshot_metadata.txt	file	prakashjha	rw-rw-r--	Mon Nov 19 22:49:45 2018
-/home/prakashjha/Desktop/dir1/dir1	dir	prakashjha	rwxr-xr-x	Mon Nov 19 22:37:18 2018
-/home/prakashjha/Desktop/dir1/dir1/dir2	dir	prakashjha	rwxr-xr-x	Fri Nov 23 03:26:17 2018
-/home/prakashjha/Desktop/dir1/dma.txt	file	prakashjha	rw-r--r--	Fri Nov 16 01:36:23 2018
-/home/prakashjha/Desktop/dir1/snapshot_template_temp.txt	file	prakashjha	rw-r--r--	Mon Nov 19 22:50:08 2018
-/home/prakashjha/Desktop/dir1/snapshot_template.txt	file	prakashjha	rw-r--r--	Mon Nov 19 22:50:08 2018

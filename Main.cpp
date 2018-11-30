@@ -43,7 +43,8 @@ string getCurrentTimeZone()
 {
     std::time_t rawtime;
     std::tm* timeinfo;
-    char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
+    char buffer[80];
+    // char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
 
     std::time(&rawtime);
     timeinfo = std::localtime(&rawtime);
@@ -51,7 +52,7 @@ string getCurrentTimeZone()
     std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
     std::puts(buffer);
 	string finalresult(buffer);
-	delete buffer;
+	// delete buffer;
 	return finalresult;
 }
 
@@ -150,6 +151,9 @@ std::vector<std::string> split(const std::string& s, const std::string& delimite
 // remove the line from file with name as passed sourceName 
 bool replaceCurrentLineInFile(string sourceNameToremove)
 {
+
+	writeLog("Entering into replaceCurrentLineInFile");
+
 	string deleteline;
 	std::string line;
 
@@ -202,12 +206,18 @@ bool replaceCurrentLineInFile(string sourceNameToremove)
 		out << itemContent << endl;
 	}
 	out.close();
+
+	writeLog("Exiting into replaceCurrentLineInFile");
+
 	return true;
 }
 
 // remove the line from file with name as passed sourceName 
 bool checkExistenceOfSource(string sourceNameToCheck)
 {
+
+	writeLog("Entering into checkExistenceOfSource");
+
 	std::string line;
 	std::ifstream file(MDPath);
 	vector<string> tokens;
@@ -225,13 +235,20 @@ bool checkExistenceOfSource(string sourceNameToCheck)
 		//cout << tokens[0]  << ":" << sourceNameToremove << endl;	
 		if(tokens.size()>0 && tokens[0] == sourceNameToCheck)
 		{
+			writeLog("Exiting into checkExistenceOfSource");
 			return true;
 		}
 	}
+
+	writeLog("Exiting into checkExistenceOfSource");
+
 	return false;
 }
 
 void performCopyOperation(string sourceParam,string destinationParam){
+
+	writeLog("Exiting into performCopyOperation");
+
 	char cwd[PATH_MAX];
 	if (getcwd(cwd, sizeof(cwd)) != NULL) 
 	{
@@ -245,9 +262,15 @@ void performCopyOperation(string sourceParam,string destinationParam){
     CopyFunctionality copyFunctionalityObj;
     copyFunctionalityObj.copy(source,destination,1);
     chdir(cwd);
+
+    writeLog("Exiting into performCopyOperation");
+
 }
 
 void performCreateSnapShotFileOperation(string sourceParam,string destinationParam){
+
+	writeLog("Entering into performCreateSnapShotFileOperation");
+
 	char cwd[PATH_MAX];
 	if (getcwd(cwd, sizeof(cwd)) != NULL) 
 	{
@@ -262,11 +285,16 @@ void performCreateSnapShotFileOperation(string sourceParam,string destinationPar
     CreateSnapShotClassObject.prepareMetadataForSnapshot(source,destination,1);
     CreateSnapShotClassObject.CreateSnapshotFile(source,destination);
     chdir(cwd);
+
+    writeLog("Exiting into performCreateSnapShotFileOperation");
 }
 
 
 bool updateLastUpdatedTimeForSnapShot(map<string,string> DataWithValue)
 {
+
+	writeLog("Entering into updateLastUpdatedTimeForSnapShot");
+
 	string deleteline;
 	std::string line;
 
@@ -334,6 +362,9 @@ bool updateLastUpdatedTimeForSnapShot(map<string,string> DataWithValue)
 	
 	//remove(MDPath);
 	//rename("temp.txt",MDPath);
+
+	writeLog("Exiting into updateLastUpdatedTimeForSnapShot");
+
 	return true;
 }
 
@@ -343,6 +374,9 @@ bool updateLastUpdatedTimeForSnapShot(map<string,string> DataWithValue)
 //140 User is trying to remove non-existed Snapshot
 int main(int argc,char *argv[])
 {	
+
+	writeLog("Entering into main of main.cpp");
+
 	std::string strCommandName = argv[1];
 	//cout << strCommandName << endl;
 	
@@ -409,9 +443,14 @@ int main(int argc,char *argv[])
 		if(replaceCurrentLineInFile(sourcePath)==true)
 		{
 			cout << "Success" << endl;
+
 			return 120;
 		}
 	}
+
+
+	writeLog("Exiting main of main.cpp");
+
 	return 0;
 	
 }

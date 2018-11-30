@@ -15,6 +15,9 @@ using namespace std;
 #define MODVAL 65521
 // static const int CHUNKSIZE  = 40;
 static const string DELIM = "$";
+
+// map<string, pair<string, int>> indexMap;
+
 struct checksumValues{
     int r1,r2;
     string checksum;
@@ -24,6 +27,9 @@ struct checksumValues{
 class Rsync{
 
     public:
+
+    map<string, pair<string, int>> indexMap;
+    
 
     //Calculates MD5 hash for the given data chunk
     vector<string> splitLine(string line, string delimiter){
@@ -92,9 +98,8 @@ class Rsync{
     }
 
     //calculate increamental rolling checksum using previous checksum
-    //outPosition - is index which is moved out of window 
-    checksumValues calcIncrementalRollingChecksum(int r1, int r2, char outChar, char inChar, int chunkLen
-    ,int outPosition){
+    //outPosition - is index which is moved out of the window 
+    checksumValues calcIncrementalRollingChecksum(int r1, int r2, char outChar, char inChar, int chunkLen ,int outPosition){
         checksumValues cv;
         int r = 0;
         
@@ -115,6 +120,7 @@ class Rsync{
     }
 
     string prepareIndexOfBackupFile(string dataFilename, int chunkSize){
+        indexMap.clear();
         cout<<"--Inside prepareIndexOfBackupFile()--"<<endl;
         FILE *dataFile = fopen((char *)dataFilename.c_str(), "rb");
         if(dataFile == NULL){
@@ -145,6 +151,7 @@ class Rsync{
             cv = calcRollingChecksum(chunk);
             strongChecksum = calcMD5(chunk);
             fprintf(indexFile, "%s:%s:%d\n",(char *)cv.checksum.c_str(), (char *)strongChecksum.c_str(), index);
+            indexMap.insert({cv.checksum, {strongChecksum, index}});
             index++;
             memset(chunk, 0, chunkSize+1);
         }
@@ -164,20 +171,17 @@ class Rsync{
         string weakChecksum, strongChecksum;
         string indexStr;
         int index;
-        while(getline(&line, &len, iPtr) != -1){
-            vector<string> vec = splitLine(line, ":");
-            weakChecksum = calcRollingChecksum(chunk).checksum;
-
-            if(weakChecksum == vec[0]){
-                // cout<<"Weak checksum matched which is: "<<weakChecksum<<endl;
-                strongChecksum = calcMD5((char *)chunk.c_str());
-                if(strongChecksum == vec[1]){
-                    indexStr = vec[2].substr(0, vec[2].length()-1);
-                    index = stoi((char *)indexStr.c_str());
-                    fclose(iPtr);
-                    return index;
-                }
-            }
+        pair<string, int> iPair;
+        weakChecksum = calcRollingChecksum(chunk).checksum;
+        iPair = indexMap[weakChecksum];
+        if(iPair.first == ""){
+            fclose(iPtr);
+            return -1;
+        }
+        strongChecksum = calcMD5((char *)chunk.c_str());
+        if(strongChecksum == iPair.first){
+            fclose(iPtr);
+            return iPair.second;
         }
         fclose(iPtr);
         return -1;

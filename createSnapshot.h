@@ -53,7 +53,10 @@ void prepareMetadataForSnapshot(char * source , char * destination,int isFirst){
             accesstime.push_back(ctime(&info.st_mtime));
             //printf("Last modified time: %s", ctime(&info.st_mtime));
             owner.push_back(pw->pw_name);
-            char *modeval = (char *)malloc(sizeof(char) * 9 + 1);
+
+            char modeval[10];
+
+            // char *modeval = (char *)malloc(sizeof(char) * 9 + 1);
             
             mode_t perm = info.st_mode;
             modeval[0] = (perm & S_IRUSR) ? 'r' : '-';

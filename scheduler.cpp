@@ -36,6 +36,9 @@ bool writeLog(string Data,int flag)
 void static performCURDOperation(vector<compareSnapshot> diffList,SyncData syncDataObj){
 
 	Scheduler schedulerobj;
+	
+	schedulerobj.writeLog("Entering into performCURDOperation",1);
+
 	// SyncData syncDataObj;
 
 	if(syncDataObj.SRCPATH==""){
@@ -48,10 +51,14 @@ void static performCURDOperation(vector<compareSnapshot> diffList,SyncData syncD
 
 		schedulerobj.writeLog("Thread Stopped Preperation CURD Ended ",1);
 	}
+
+	schedulerobj.writeLog("Exiting into performCURDOperation",1);
 }
 
 
 vector<compareSnapshot> processSnapShot(string sourcePath,string destinationPath,SyncData &syncDataObj){
+
+	writeLog("Entering into processSnapShot",1);
 
 	
     Scheduler Schedulerobj;
@@ -109,6 +116,9 @@ vector<compareSnapshot> processSnapShot(string sourcePath,string destinationPath
     
     Schedulerobj.writeLog("Has Created SnapShot Now Going for Comparing snapShot",1);
 	
+
+    writeLog("Exiting into processSnapShot",1);
+
     return diffList;	
 }
 
@@ -356,7 +366,8 @@ string getCurrentTimeZone()
 {
     std::time_t rawtime;
     std::tm* timeinfo;
-    char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
+    char buffer[80];
+    // char * buffer = (char *)malloc(sizeof(80*sizeof(char)));
 
     std::time(&rawtime);
     timeinfo = std::localtime(&rawtime);
@@ -364,7 +375,7 @@ string getCurrentTimeZone()
     std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
     std::puts(buffer);
 	string finalresult(buffer);
-	delete buffer;
+	// delete buffer;
 	return finalresult;
 }
 
@@ -392,9 +403,13 @@ int main(){
 	}
 
 	int l=0;
+	unsigned long long int counter = 0;
 	// while(++l<3)
 	while(true)
 	{
+		counter++;
+		schedulerObj.writeLog(to_string(counter),1);
+		schedulerObj.writeLog("*******************************************************************************",1);
 		SyncData syncDataObj;
 		schedulerObj.writeLog(" Scheduler Started ",1);
 		vector<SnapShotMetaDataInformation> snapShotToProcess;
@@ -414,10 +429,12 @@ int main(){
 			if(diffList.size()>0){
 
 				// schedulerObj.performCURDOperation(diffList);
+				schedulerObj.writeLog("```````````````````````````````````````````````````````````````````````````````",1);
+				schedulerObj.writeLog(snapShotToProcess[i].sourcePath,1);
+					
 
-				
 				thread t(schedulerObj.performCURDOperation,diffList,syncDataObj);	
-			 	t.join();
+			 	t.detach();
 
 			}else{
 				cout<<"no op\n";
@@ -426,7 +443,7 @@ int main(){
 			}
 			 
 		}
-		
+		schedulerObj.writeLog("*******************************************************************************",1);
 		schedulerObj.writeLog("Scheduler Started updating time Stamp of Meta Data File",1);
 		
 		if(AllDetailsForTimeUpdate.size()>0)

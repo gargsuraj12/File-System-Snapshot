@@ -51,6 +51,7 @@ public:
 
 
 	int getChunkSizeOfFile(string filePath){
+		writeLog("Entering into getChunkSizeOfFile",1);
 		struct stat infofile;
             // strcpy(temppath,source);
         int status = stat((char *)filePath.c_str(),&infofile);
@@ -60,22 +61,33 @@ public:
         }else{
         	cout<<"file Size is: "<<infofile.st_size<<endl;
         }
+
+        writeLog("Exiting into getChunkSizeOfFile",1);
+
         return ceil(sqrt(infofile.st_size));
 	}
 
 	int createSnapshotFunctionality(string sourcePath,string destinationPath){
 
+		writeLog("Entering into createSnapshotFunctionality",1);
+
 		CreateSnapShotClass createSnapShotClassObj;
 		createSnapShotClassObj.prepareMetadataForSnapshot(toCharArrayFromString(sourcePath),toCharArrayFromString(destinationPath),1);
 		createSnapShotClassObj.CreateSnapshotFile(toCharArrayFromString(sourcePath),toCharArrayFromString(destinationPath));
+
+		writeLog("Exiting into createSnapshotFunctionality",1);
 
 		return 0;
 	}
 
 	bool static isFile(const struct compareSnapshot a,const struct compareSnapshot b){
 
+		// writeLog("Entering into isFile",1);
+
 		if(a.details.isFile==1&&b.details.isFile==0)
 			return false;
+
+		// writeLog("Exiting into isFile",1);
 
 		return true;
 	}
@@ -113,6 +125,7 @@ public:
 		// 	cout<< diffList[i].details.fullQualifiedPath<<" "<<diffList[i].operationType<<"\n";
 		// }
 
+		writeLog("Entering into removeRedundantEntries",1);
 
 		vector<int> toDelete;
 
@@ -153,6 +166,8 @@ public:
 
 		}
 		
+		writeLog("Exiting into removeRedundantEntries",1);
+
 		return modifiedDiffList;
 	}
 
@@ -235,11 +250,15 @@ public:
 			snapshotFile.close();
 		}
 
+		writeLog("Exiting into readSnapShot",1);
+
 		return detailsList;
 	}
 
 
 	void replaceSnapshotFile(string sourcePath,string destinationPath){
+
+		writeLog("Entering into replaceSnapshotFile",1);
 
 		ofstream destinationFile(destinationPath);
 
@@ -268,10 +287,15 @@ public:
 		else{
 			cout << "Unable to open destination file\n";	
 		} 
+
+		writeLog("Entering into replaceSnapshotFile",1);
+
 	}
 
 
 	vector<struct compareSnapshot> compareSnapshotFile(string sourcePath,string destinationPath){
+
+		writeLog("Entering into compareSnapshotFile",1);		
 
 		char cwd[PATH_MAX];
 		if (getcwd(cwd, sizeof(cwd)) != NULL) 
@@ -421,12 +445,17 @@ public:
 
 		writeLog("**************************************",1);
 		cout<<"**************************************"<<"\n";
+		
+		writeLog("Exiting into compareSnapshotFile",1);
+
 		return diffList;
 	}
 
 
 
 	bool runTasks(vector<struct compareSnapshot> diffList){
+
+		writeLog("Entering into runTasks",1);
 
 		string dPath = "",sPath = "";
 
@@ -465,8 +494,9 @@ public:
 				// folder = sPath.substr(lastindex+1,sPath.length());
 				if(diffList[i].details.isFile==false)
 				{
-					if (mkdir(toCharArrayFromString(dPath),0777) == -1)
+					if (mkdir(toCharArrayFromString(dPath),0777) == -1){
                         // perror("cant do mkdir in compareSnapshot");	
+					}
 				}else{
 					dPath = SplitFilename(dPath);
 				}
@@ -554,10 +584,15 @@ public:
 			}
 		}
 
+		writeLog("Exiting into runTasks",1);
+
 	}
 
 	
 	int PerformModifyOperationForFile(string srcFilePath, string backupFilePath){
+		
+		writeLog("Entering into PerformModifyOperationForFile",1);
+
 		cout << "12---------- Inside PerformModifyOperationForFile() ----------" << endl;
         cout<<"Source File Path is: "<< srcFilePath<<endl;
 		cout<<"Backup File Path is: "<< backupFilePath << endl;
@@ -617,6 +652,7 @@ public:
 			cout<<"Backup file "<<srcFilePath<<" deleted successfully"<<endl;
 		}
 
+		writeLog("Exiting into PerformModifyOperationForFile",1);
 		
 		return 0;
 	}

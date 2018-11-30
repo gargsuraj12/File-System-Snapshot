@@ -3,7 +3,7 @@ from the University of Nottingham, Neil is just plain keen on programming langua
 new ways of solving computing problems. He’s written systems to program in BCPL, FP (Functional
 Programming), Lisp, Prolog, and a structured BASIC. He even wrote a 6502 microprocessor emulator to
 <--inserted-->
-l around the world, corresponding almost exclusively over the Internet.
+$l around the world, corresponding almost exclusively over the Internet.
 From an initial kernel that partially implemented a small subset of the UNIX
 system service
 run BBC microcomputer programs on UNIX systems.
