@@ -15,27 +15,28 @@
 using namespace std;
 
 #define MODVAL 1048576
-// static const int CHUNKSIZE  = 40;
 static const string DELIM = "$";
-// static const string END_DELIM = "$|";
+map<string, pair<string, int>> indexMap;
 
 struct checksumValues{
     int r1,r2;
     string checksum;
+    int index = -1;
 };
 
 int getChunkSizeOfFile(string filePath){
-    struct stat infofile;
+	struct stat infofile;
         // strcpy(temppath,source);
     int status = stat((char *)filePath.c_str(),&infofile);
     if(status != 0){
-        cout<<"Unable to get file stat for"<<filePath<<endl;
-        return -1;
+    	cout<<"Unable to get file stat for"<<filePath<<endl;
+    	return -1;
     }else{
-        cout<<"file Size is: "<<infofile.st_size<<endl;
+    	cout<<"file Size is: "<<infofile.st_size<<endl;
     }
     return ceil(sqrt(infofile.st_size));
 }
+
 
 class Rsync{
 
@@ -93,7 +94,8 @@ class Rsync{
         int chunkLen = chunk.length();
         for(int i=0; i<chunkLen; i++){
             r1 += (int)chunk[i] % MODVAL;
-            r2 += (((chunkLen-i+1)) * ((int)chunk[i]) ) % MODVAL;
+            //r2 += (((chunkLen-i+1)) * ((int)chunk[i]) ) % MODVAL;
+            r2 += (((chunkLen-i)) * ((int)chunk[i]) ) % MODVAL;
         }
         // r2 = (r2 << 16)%MODVAL;
         r = (r1 + (r2 << 16) % MODVAL) % MODVAL;
@@ -107,12 +109,19 @@ class Rsync{
     }
 
     //calculate increamental rolling checksum using previous checksum
-    checksumValues calcIncrementalRollingChecksum(int r1, int r2, char out, char in, int chunkLen){
+    //outPosition - is index which is moved out of the window 
+    checksumValues calcIncrementalRollingChecksum(int r1, int r2, char outChar, char inChar, int chunkLen ,int outPosition){
         checksumValues cv;
         int r = 0;
-        r1 = (r1 - out + in) % MODVAL;
-        r2 = (r2 - (chunkLen*out)% MODVAL + r1) % MODVAL;
+        
+        //r1 = (r1 - out + in) % MODVAL;
+        //r2 = (r2 - (chunkLen*out)% MODVAL + r1) % MODVAL;
+
+
+        r1 = (r1 - outChar + inChar) % MODVAL;
+        r2 = (r2 - ((chunkLen-outPosition)*outChar)% MODVAL + r1) % MODVAL;
         r = (r1 + (r2 << 16) % MODVAL) % MODVAL; 
+
         stringstream stream;
         stream << hex << r;
         cv.r1 = r1;
@@ -122,6 +131,7 @@ class Rsync{
     }
 
     string prepareIndexOfBackupFile(string dataFilename, int chunkSize){
+        cout<<"--Inside prepareIndexOfBackupFile()--"<<endl;
         FILE *dataFile = fopen((char *)dataFilename.c_str(), "rb");
         if(dataFile == NULL){
             cout<<"Unable to open file "<<dataFilename<<endl;
@@ -142,14 +152,16 @@ class Rsync{
         bool eof = false;
         while(!eof){
             int x = fread(chunk, 1, chunkSize, dataFile);
+            cout<<"Bytes read from backup file are: "<<x<<endl;
             if(x<=0){   //ch == EOF
                 eof = true;
                 continue;
             }
-            cout<< j++ <<". Chunk in createIndexFile() is: "<<chunk<<endl;
+            cout<< j++ <<"th. chunk of backup file is: "<<chunk<<endl;
             cv = calcRollingChecksum(chunk);
             strongChecksum = calcMD5(chunk);
             fprintf(indexFile, "%s:%s:%d\n",(char *)cv.checksum.c_str(), (char *)strongChecksum.c_str(), index);
+            indexMap.insert({cv.checksum, {strongChecksum, index}});
             index++;
             memset(chunk, 0, chunkSize+1);
         }
@@ -169,26 +181,24 @@ class Rsync{
         string weakChecksum, strongChecksum;
         string indexStr;
         int index;
-        while(getline(&line, &len, iPtr) != -1){
-            vector<string> vec = splitLine(line, ":");
-            weakChecksum = calcRollingChecksum(chunk).checksum;
-
-            if(weakChecksum == vec[0]){
-                // cout<<"Weak checksum matched which is: "<<weakChecksum<<endl;
-                strongChecksum = calcMD5((char *)chunk.c_str());
-                if(strongChecksum == vec[1]){
-                    indexStr = vec[2].substr(0, vec[2].length()-1);
-                    index = stoi((char *)indexStr.c_str());
-                    fclose(iPtr);
-                    return index;
-                }
-            }
+        pair<string, int> iPair;
+        weakChecksum = calcRollingChecksum(chunk).checksum;
+        iPair = indexMap[weakChecksum];
+        if(iPair.first == ""){
+            fclose(iPtr);
+            return -1;
+        }
+        strongChecksum = calcMD5((char *)chunk.c_str());
+        if(strongChecksum == iPair.first){
+            fclose(iPtr);
+            return iPair.second;
         }
         fclose(iPtr);
         return -1;
     }
 
     string prepareUpdateIndexFile(string srcDataFile, string indexFile, int chunkSize){
+        cout<<"--Inside prepareUpdateIndexFile()--"<<endl;
         FILE *dPtr, *uPtr;
         dPtr = fopen((char *)srcDataFile.c_str(), "rb");
         if(dPtr == NULL){
@@ -205,18 +215,19 @@ class Rsync{
         string weakChecksum, strongChecksum;
         int index;
         fpos_t position;
+        fgetpos(dPtr, &position);
         fsetpos(dPtr, &position);
         int i=0;
         bool eof = false;
         char dummy = '#';
-        // cout<<i++<<". Chunk in prepareUpdateIndexFile() is: "<<chunk<<endl;
         while(!eof){
+            // cout<<"at beginning --- Source file head is at: "<<ftell(dPtr)<<endl;
             int x = fread(chunk, 1, chunkSize, dPtr);
             if(x <= 0){
                 eof = true;
                 continue;
             }
-            cout<<i++<<". Chunk in prepareUpdateIndexFile() is: "<<chunk<<endl;
+            cout<<i++<<"th. chunk of source file is: "<<chunk<<endl;
             index = checksumMatch(indexFile, chunk);
             if(index != -1){
                 cout<<"--------Checksum matched-----------"<<endl;
@@ -232,16 +243,13 @@ class Rsync{
                 }else{
                     fwrite(&chunk[0], 1, 1, uPtr);
                 }
-                // fwrite(&chunk[0], 1, 1, uPtr);
+                // cout<<"value of position is: "<<(unsigned char *)&position<<endl;
                 fsetpos(dPtr, &position);
                 fseek(dPtr, 1, SEEK_CUR);
-                // cout<<ftell(dPtr)<<endl;
+                // cout<<"head after reset: "<<ftell(dPtr)<<endl;
             }
             memset(chunk, 0, chunkSize+1);
             fgetpos(dPtr, &position);
-            // if(ch == EOF){
-            //     eof = true;
-            // }
         }
         //writing dummy character in updateIndex file so that while merging last character doesn't miss out
         fwrite(&dummy, 1, 1, uPtr);
@@ -317,6 +325,7 @@ class Rsync{
         fclose(uiPtr);
         fclose(newPtr);
 
+        //Comment below lines if you want to see the difference between old backup file and newly created backup file
         int x = remove((char *)dataBackFile.c_str());
         if (x != 0){
             cout<<"Unable to delete old backup file.."<<endl;
@@ -344,6 +353,7 @@ int main(){
     string indexFilePath;
     string updateIndexFilePath;
     if(!ch){
+        cout<<"Chunksize of the file is: "<<chunkSize<<endl;
         indexFilePath = rObj.prepareIndexOfBackupFile(backupFilePath, chunkSize);
         return 0;
     }
